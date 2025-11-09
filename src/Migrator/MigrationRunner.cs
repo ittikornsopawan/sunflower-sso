@@ -21,7 +21,6 @@ public class MigrationRunner
         _hostname = Environment.MachineName;
         _deviceId = GetDeviceId();
 
-
         using (var client = new HttpClient())
         {
             var json = client.GetStringAsync("http://ip-api.com/json").Result;
@@ -69,47 +68,80 @@ public class MigrationRunner
             var sql = await File.ReadAllTextAsync(file);
 
             await using var tx = await conn.BeginTransactionAsync();
-            await using var cmd = new NpgsqlCommand(sql, conn, tx);
-            await cmd.ExecuteNonQueryAsync();
-
-            if (direction == "up")
+            try
             {
-                await InsertMigrationAsync(conn, filename, direction);
-            }
-            else if (direction == "down")
-            {
-                var upFilename = filename.Replace(".down.sql", ".up.sql");
-                await DeleteMigrationAsync(conn, upFilename, "up");
-            }
+                var statements = sql.Split(";", StringSplitOptions.RemoveEmptyEntries);
 
-            await tx.CommitAsync();
-
-            var afterSnapshot = await GetSchemaSnapshotAsync(conn);
-
-            var added = afterSnapshot.Except(beforeSnapshot);
-            var removed = beforeSnapshot.Except(afterSnapshot);
-
-            foreach (var item in added)
-            {
-                var parts = item.Split(':', 2);
-                if (parts.Length == 2)
+                foreach (var stmtRaw in statements)
                 {
-                    await InsertSchemaChangeAsync(conn, filename, direction, parts[0], parts[1], "added");
-                }
-            }
+                    var stmt = stmtRaw.Trim();
+                    if (string.IsNullOrWhiteSpace(stmt))
+                        continue;
 
-            foreach (var item in removed)
-            {
-                var parts = item.Split(':', 2);
-                if (parts.Length == 2)
+                    try
+                    {
+                        await using var cmd = new NpgsqlCommand(stmt, conn, tx);
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception exStmt)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"❌ Statement failed in file '{filename}': {stmt}");
+                        Console.WriteLine($"   Error: {exStmt.Message}");
+                        Console.ResetColor();
+                        throw;
+                    }
+                }
+
+                if (direction == "up")
                 {
-                    await InsertSchemaChangeAsync(conn, filename, direction, parts[0], parts[1], "removed");
+                    await InsertMigrationAsync(conn, filename, direction);
                 }
+                else if (direction == "down")
+                {
+                    var upFilename = filename.Replace(".down.sql", ".up.sql");
+                    await DeleteMigrationAsync(conn, upFilename, "up");
+                }
+
+                await tx.CommitAsync();
+
+                var afterSnapshot = await GetSchemaSnapshotAsync(conn);
+
+                var added = afterSnapshot.Except(beforeSnapshot);
+                var removed = beforeSnapshot.Except(afterSnapshot);
+
+                foreach (var item in added)
+                {
+                    var parts = item.Split(':', 2);
+                    if (parts.Length == 2)
+                    {
+                        await InsertSchemaChangeAsync(conn, filename, direction, parts[0], parts[1], "added");
+                    }
+                }
+
+                foreach (var item in removed)
+                {
+                    var parts = item.Split(':', 2);
+                    if (parts.Length == 2)
+                    {
+                        await InsertSchemaChangeAsync(conn, filename, direction, parts[0], parts[1], "removed");
+                    }
+                }
+
+                await InsertLogAsync(conn, filename, direction);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"✅ Success: {filename}");
+                Console.ResetColor();
             }
-
-            await InsertLogAsync(conn, filename, direction);
-
-            Console.WriteLine($"✅ Success: {filename}");
+            catch (Exception ex)
+            {
+                await tx.RollbackAsync();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"❌ Migration failed in file '{filename}': {ex.Message}");
+                Console.ResetColor();
+                throw;
+            }
         }
     }
 
