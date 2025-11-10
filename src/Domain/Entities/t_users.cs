@@ -5,7 +5,6 @@ namespace Domain.Entities;
 
 public class t_users : AuditableEntity
 {
-    public required string code { get; set; }
     public required string username { get; set; }
     public required string authenticationType { get; set; }
 }
