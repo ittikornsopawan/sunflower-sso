@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,25 +14,29 @@ namespace Presentation.Controllers
         {
         }
 
-        [HttpPost("login")]
+        [AllowAnonymous]
+        [HttpPost("v1/login")]
         public IActionResult Login()
         {
             return Ok();
         }
 
-        [HttpPost("login/mobile")]
+        [AllowAnonymous]
+        [HttpPost("v1/login/mobile")]
         public IActionResult LoginMobile()
         {
             return Ok();
         }
 
-        [HttpPost("login/email")]
+        [AllowAnonymous]
+        [HttpPost("v1/login/email")]
         public IActionResult LoginEmail()
         {
             return Ok();
         }
 
-        [HttpPost("login/social")]
+        [AllowAnonymous]
+        [HttpPost("v1/login/social")]
         public IActionResult LoginSocial()
         {
             return Ok();

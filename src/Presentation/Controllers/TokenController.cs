@@ -13,13 +13,13 @@ namespace Presentation.Controllers
         {
         }
 
-        [HttpPost("introspect")]
+        [HttpPost("v1/introspect")]
         public IActionResult Introspect()
         {
             return Ok();
         }
 
-        [HttpPost("revoke")]
+        [HttpPost("v1/revoke")]
         public IActionResult Revoke()
         {
             return Ok();
