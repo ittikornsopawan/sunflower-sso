@@ -11,7 +11,6 @@ public class t_sessions : AuditableEntity
     public string revokedReason { get; set; } = default!;
     public DateTimeOffset expiresAt { get; set; }
     public Guid userId { get; set; }
-    public required string code { get; set; }
     public required string accessToken { get; set; }
     public DateTimeOffset accessTokenExpiresAt { get; set; }
     public required string refreshAccessToken { get; set; }
