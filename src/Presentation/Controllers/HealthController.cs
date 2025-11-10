@@ -27,7 +27,13 @@ namespace Presentation.Controllers
         [HttpGet]
         public IActionResult GetHealth()
         {
-            return Ok("Healthy");
+            var healthStatus = new
+            {
+                status = "Healthy",
+                timestamp = DateTime.UtcNow
+            };
+
+            return Ok(healthStatus);
         }
 
         /// <summary>

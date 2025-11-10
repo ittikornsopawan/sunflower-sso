@@ -1,41 +1,170 @@
+using System.Net;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using Microsoft.Extensions.Options;
+
+using Serilog;
+using FluentValidation;
+using MediatR;
+
+using Api.Common.Behaviors;
+
+using Application;
+using Domain;
+
+using Infrastructure;
+using Infrastructure.Persistence;
+
+using Shared.Configurations;
+using Shared.Common;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options
+        .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .EnableSensitiveDataLogging()
+        .LogTo(Console.WriteLine, LogLevel.Information)
+);
+
+builder.Services
+    .AddApplication()
+    .AddDomain()
+    .AddInfrastructure(builder.Configuration);
+
+// Dynamically register interface-implementation pairs across assemblies (e.g., IMemberRepository -> MemberRepository)
+var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+    .Where(x => !x.IsDynamic && !string.IsNullOrEmpty(x.FullName))
+    .ToList();
+
+var projectAssemblies = loadedAssemblies
+    .Where(x => x.FullName!.StartsWith("Microservices"))
+    .ToList();
+
+var allInterfaces = projectAssemblies
+    .SelectMany(x => x.GetTypes())
+    .Where(x => x.IsInterface)
+    .ToList();
+
+var allImplementations = projectAssemblies
+    .SelectMany(x => x.GetTypes())
+    .Where(x => x.IsClass && !x.IsAbstract && !x.IsGenericTypeDefinition)
+    .ToList();
+
+foreach (var impl in allImplementations)
+{
+    var iface = allInterfaces.FirstOrDefault(x => x.Name == $"I{impl.Name}");
+    if (iface != null)
+    {
+        builder.Services.AddScoped(iface, impl);
+        Console.WriteLine($"[DI] Registered {iface.FullName} => {impl.FullName}");
+    }
+}
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.Configure<AppSettings>(builder.Configuration);
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<AppSettings>>().Value);
+
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddControllers();
+builder.Services.AddAuthorization();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var response = new ResponseModel
+        {
+            status = new StatusResponseModel
+            {
+                statusCode = HttpStatusCode.BadRequest,
+                timestamp = DateTime.UtcNow
+            }
+        };
+
+        return new BadRequestObjectResult(response);
+    };
+});
+
+var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+builder.Services.AddValidatorsFromAssemblies(assemblies);
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+// Add Swagger/OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Loyalty Program", Version = "v1" });
+
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your valid token."
+    };
+
+    c.AddSecurityDefinition("Bearer", securityScheme);
+
+    var securityRequirement = new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    };
+
+    c.AddSecurityRequirement(securityRequirement);
+});  // เพิ่ม Swagger
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
-app.MapGet("/weatherforecast", () =>
+try
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    Log.Information("Starting Products API");
+    app.Run();
+}
+catch (Exception ex)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    Log.Fatal(ex, "Product API terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
 }
