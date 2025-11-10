@@ -1,8 +1,9 @@
 using System;
+using Domain.Common;
 
 namespace Domain.Entities;
 
-public class t_sessions
+public class t_sessions : AuditableEntity
 {
     public bool isRevoked { get; set; } = false;
     public DateTimeOffset? revokedAt { get; set; } = default!;

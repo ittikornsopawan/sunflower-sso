@@ -12,7 +12,12 @@ public class AuditableEntity : BaseEntity
     /// <summary>
     /// The date and time when the entity was deactivated, if applicable.
     /// </summary>
-    public DateTime? deactivatedAt { get; set; }
+    public DateTime? inactiveAt { get; set; }
+
+    /// <summary>
+    /// The identifier of the user who deactivated the entity, if applicable.
+    /// </summary>
+    public Guid? inactiveById { get; set; }
 
     /// <summary>
     /// Indicates whether the entity has been marked as deleted.

@@ -19,6 +19,11 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Gateway/" />
+    <Folder Include="Repository/" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -11,7 +11,7 @@ public class t_addresses : AuditableEntity
     public required byte[] address { get; set; }
     public byte[] addressAdditional { get; set; } = default!;
     public required string countryCode { get; set; }
-    public string country_name { get; set; } = default!;
+    public string countryName { get; set; } = default!;
     public string state { get; set; } = default!;
     public string city { get; set; } = default!;
     public string district { get; set; } = default!;
