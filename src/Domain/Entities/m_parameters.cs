@@ -5,10 +5,10 @@ namespace Domain.Entities;
 
 public class m_parameters : AuditableEntity
 {
-    public DateTimeOffset effectiveAt { get; set; }
-    public DateTimeOffset? expiresAt { get; set; }
-    public string category { get; set; } = default!;
+    public DateTime effectiveAt { get; set; }
+    public DateTime? expiresAt { get; set; }
+    public string? category { get; set; }
     public required string key { get; set; }
-    public string language { get; set; } = default!;
-    public string value { get; set; } = default!;
+    public string? language { get; set; }
+    public string? value { get; set; }
 }

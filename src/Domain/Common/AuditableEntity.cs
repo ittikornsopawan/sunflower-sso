@@ -27,7 +27,7 @@ public class AuditableEntity : BaseEntity
     /// <summary>
     /// The identifier of the user who deleted the entity, if applicable.
     /// </summary>
-    public string? deletedById { get; set; }
+    public Guid? deletedById { get; set; }
 
     /// <summary>
     /// The date and time when the entity was deleted, if applicable.
@@ -37,7 +37,7 @@ public class AuditableEntity : BaseEntity
     /// <summary>
     /// The identifier of the user who created the entity.
     /// </summary>
-    public string? createdById { get; set; }
+    public Guid? createdById { get; set; }
 
     /// <summary>
     /// The date and time when the entity was created.
@@ -47,7 +47,7 @@ public class AuditableEntity : BaseEntity
     /// <summary>
     /// The identifier of the user who last updated the entity, if applicable.
     /// </summary>
-    public string? updatedById { get; set; }
+    public Guid? updatedById { get; set; }
 
     /// <summary>
     /// The date and time when the entity was last updated, if applicable.

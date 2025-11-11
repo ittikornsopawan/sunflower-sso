@@ -13,6 +13,11 @@
     <PackageReference Include="MediatR" Version="*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Parameter/Command/" />
+    <Folder Include="Parameter/Mapping/" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

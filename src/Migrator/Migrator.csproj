@@ -17,11 +17,4 @@
     <PackageReference Include="Npgsql" Version="*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations/Data" />
-    <Folder Include="Migrations/View" />
-    <Folder Include="Migrations/Process" />
-    <Folder Include="Resources/" />
-  </ItemGroup>
-
 </Project>

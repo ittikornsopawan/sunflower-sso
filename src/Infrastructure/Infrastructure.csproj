@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Gateway/" />
-    <Folder Include="Repository/" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -61,6 +61,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_change_logs", "audit");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -74,6 +75,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_change_log_items", "audit");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -87,6 +89,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_request_logs", "audit");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -104,6 +107,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_user_authentications", "authentication");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -128,6 +132,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_user_open_authentication", "authentication");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -156,6 +161,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_user_referrer_mappings", "authentication");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -167,6 +173,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_users", "authentication");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -187,6 +194,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("m_attributes", "author");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -214,6 +222,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_policies", "author");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -238,6 +247,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_policy_attribute_mappings", "author");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -260,6 +270,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_policy_decision_logs", "author");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -276,6 +287,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_user_attribute_mappings", "author");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -296,6 +308,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("m_algorithms", "key");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -318,6 +331,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("m_key_types", "key");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -340,6 +354,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("m_keys", "key");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -361,6 +376,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_push_notifications", "notification");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -384,6 +400,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_otp", "otp");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -405,6 +422,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_otp_logs", "otp");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -427,6 +445,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("m_user_profiles", "profile");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -446,6 +465,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("m_error_handlers", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -467,6 +487,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("m_parameters", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -484,12 +505,15 @@ public class AppDbContext : DbContext
             entity.Property(e => e.key).HasColumnName("key");
             entity.Property(e => e.language).HasColumnName("language");
             entity.Property(e => e.value).HasColumnName("value");
+
+            entity.Ignore(e => e.code);
         });
 
         modelBuilder.Entity<t_addresses>(entity =>
         {
             entity.ToTable("t_addresses", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -522,6 +546,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_contacts", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -544,6 +569,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_files", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -575,6 +601,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_personal_addresses", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -594,6 +621,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_personal_contacts", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -613,6 +641,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_personal_info", "public");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -638,6 +667,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_session_attributes", "session");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -658,6 +688,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_session_policies", "session");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");
@@ -678,6 +709,7 @@ public class AppDbContext : DbContext
         {
             entity.ToTable("t_sessions", "session");
 
+            entity.HasKey(e => e.id);
             entity.Property(e => e.id).HasColumnName("id");
             entity.Property(e => e.createdById).HasColumnName("created_by");
             entity.Property(e => e.createdAt).HasColumnName("created_at");

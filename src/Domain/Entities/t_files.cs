@@ -5,8 +5,8 @@ namespace Domain.Entities;
 
 public class t_files : AuditableEntity
 {
-    public DateTimeOffset effectiveAt { get; set; }
-    public DateTimeOffset? expiresAt { get; set; }
+    public DateTime effectiveAt { get; set; }
+    public DateTime? expiresAt { get; set; }
     public string usageType { get; set; } = default!;
     public string filePath { get; set; } = default!;
     public string fileName { get; set; } = default!;

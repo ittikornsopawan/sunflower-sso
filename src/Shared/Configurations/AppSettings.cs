@@ -11,24 +11,25 @@ public class AppSettings
     public EncryptionOptions DbEncryption { get; set; } = new();
     public TokenOptions Token { get; set; } = new();
     public PaginationOptions Pagination { get; set; } = new();
+    public HealthCheck HealthCheck { get; set; } = new();
 }
 
 public class ConnectionStrings
 {
-    public string DefaultConnection { get; set; } = string.Empty;
+    public string DefaultConnection { get; set; } = default!;
 }
 
 public class RedisOptions
 {
-    public string Host { get; set; } = string.Empty;
+    public string Host { get; set; } = default!;
     public int Port { get; set; }
-    public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = default!;
 }
 
 public class EncryptionOptions
 {
-    public string Key { get; set; } = string.Empty;
-    public string IV { get; set; } = string.Empty;
+    public string Key { get; set; } = default!;
+    public string IV { get; set; } = default!;
 }
 
 public class TokenOptions
@@ -41,4 +42,9 @@ public class TokenOptions
 public class PaginationOptions
 {
     public int DefaultPageSize { get; set; } = 20;
+}
+
+public class HealthCheck
+{
+    public string Database { get; set; } = default!;
 }

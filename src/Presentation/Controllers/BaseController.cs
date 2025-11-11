@@ -5,6 +5,7 @@ using Shared.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace Presentation.Controllers;
 
@@ -12,6 +13,8 @@ public class BaseController : ControllerBase, IActionFilter
 {
     public readonly AppSettings _appSettings;
     public HeaderModel? _header;
+    private Stopwatch _stopwatch = new Stopwatch();
+    public int? _duration;
 
     public BaseController(IOptions<AppSettings> appSettings)
     {
@@ -21,6 +24,8 @@ public class BaseController : ControllerBase, IActionFilter
     [NonAction]
     public void OnActionExecuting(ActionExecutingContext context)
     {
+        _stopwatch.Restart();
+
         var accessToken = Request.Headers["Authorization"].FirstOrDefault();
         if (!string.IsNullOrEmpty(accessToken)) accessToken = accessToken.Substring("Bearer ".Length);
 
@@ -39,6 +44,8 @@ public class BaseController : ControllerBase, IActionFilter
     [NonAction]
     public void OnActionExecuted(ActionExecutedContext context)
     {
+        _stopwatch.Stop();
+        _duration = (int)_stopwatch.ElapsedMilliseconds;
     }
 
     protected IActionResult ResponseHandler(HttpStatusCode statusCode = HttpStatusCode.OK)

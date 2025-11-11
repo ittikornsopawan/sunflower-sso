@@ -5,8 +5,8 @@ namespace Domain.Entities;
 
 public class t_addresses : AuditableEntity
 {
-    public DateTimeOffset effectiveAt { get; set; }
-    public DateTimeOffset? expiresAt { get; set; }
+    public DateTime effectiveAt { get; set; }
+    public DateTime? expiresAt { get; set; }
     public required string type { get; set; }
     public required byte[] address { get; set; }
     public byte[] addressAdditional { get; set; } = default!;

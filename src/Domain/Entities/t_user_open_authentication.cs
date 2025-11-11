@@ -14,6 +14,6 @@ public class t_user_open_authentication : AuditableEntity
     public string profilePictureUrl { get; set; } = default!;
     public string accessToken { get; set; } = default!;
     public string refreshToken { get; set; } = default!;
-    public DateTimeOffset? tokenExpiresAt { get; set; }
+    public DateTime? tokenExpiresAt { get; set; }
     public string rawResponse { get; set; } = default!;
 }
