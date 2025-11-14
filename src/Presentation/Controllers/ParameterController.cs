@@ -1,5 +1,6 @@
 using System.Net;
 using Application.Parameter.Query;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ namespace Presentation.Controllers
             if (response.data == null || !response.data.Any())
                 return this.ResponseHandler(HttpStatusCode.NotFound);
 
-            return this.ResponseHandler<List<ParameterDTO>>(response.data!, HttpStatusCode.OK);
+            return this.ResponseHandler<List<ParameterEntity>>(response.data!, HttpStatusCode.OK);
         }
     }
 }

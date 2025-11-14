@@ -33,7 +33,7 @@ namespace Presentation.Controllers
         [HttpGet("v1")]
         public async Task<IActionResult> GetHealth()
         {
-            return this.ResponseHandler<string>("Healthy", HttpStatusCode.OK);
+            return await Task.FromResult(this.ResponseHandler<string>("Healthy", HttpStatusCode.OK));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Presentation.Controllers
             if (response.status.statusCode != HttpStatusCode.OK)
                 return this.ResponseHandler(HttpStatusCode.InternalServerError);
 
-            return this.ResponseHandler<string>("All dependencies are healthy", HttpStatusCode.OK);
+            return await Task.FromResult(this.ResponseHandler<string>("All dependencies are healthy", HttpStatusCode.OK));
         }
     }
 }
