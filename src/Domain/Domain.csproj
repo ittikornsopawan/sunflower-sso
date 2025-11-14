@@ -12,8 +12,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domains/" />
     <Folder Include="Interfaces/Gateway/" />
+    <Folder Include="UseCases/Authorization/" />
+    <Folder Include="UseCases/Authorization/Events/" />
+    <Folder Include="UseCases/Authorization/Services/" />
+    <Folder Include="UseCases/LoginUser/" />
+    <Folder Include="UseCases/LoginUser/Events/" />
+    <Folder Include="UseCases/LoginUser/Services/" />
+    <Folder Include="UseCases/OTP/" />
+    <Folder Include="UseCases/OTP/Events/" />
+    <Folder Include="UseCases/OTP/Services/" />
+    <Folder Include="UseCases/RegisterUser/Events/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Entities/OtpEntity.cs" />
+    <None Include="Entities/UserEntity.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

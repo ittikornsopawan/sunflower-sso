@@ -15,6 +15,34 @@ namespace Presentation.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("v1/register")]
+        public IActionResult Register()
+        {
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("v1/register/mobile")]
+        public IActionResult RegisterMobile()
+        {
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("v1/register/email")]
+        public IActionResult RegisterEmail()
+        {
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("v1/register/social")]
+        public IActionResult RegisterSocial()
+        {
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpPost("v1/login")]
         public IActionResult Login()
         {

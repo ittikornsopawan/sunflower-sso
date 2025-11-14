@@ -4,26 +4,26 @@ using MediatR;
 using Application.Common;
 using Domain.Interfaces.Repository;
 using Shared.Common;
+using Shared.DTOs;
+using Domain.Entities;
 
 namespace Application.Parameter.Query;
 
-public class ParameterQueryHandler : CommonHandler, IRequestHandler<ParameterQuery, ResponseModel<List<string?>>>
+public class ParameterQueryHandler : CommonHandler, IRequestHandler<ParameterQuery, ResponseModel<List<ParameterEntity>?>>
 {
-    private readonly IParameterRepository _parameterRepository;
+    private readonly IParameterQueryRepository _parameterQueryRepository;
 
-    public ParameterQueryHandler(IParameterRepository parameterRepository)
+    public ParameterQueryHandler(IParameterQueryRepository parameterQueryRepository)
     {
-        _parameterRepository = parameterRepository;
+        _parameterQueryRepository = parameterQueryRepository;
     }
 
-    public async Task<ResponseModel<List<string?>>> Handle(ParameterQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseModel<List<ParameterEntity>?>> Handle(ParameterQuery request, CancellationToken cancellationToken)
     {
-        var parameters = await _parameterRepository.GetParameters(request.key!);
-        if (parameters == null || !parameters.Any())
-            return this.FailResponse<List<string?>>(HttpStatusCode.NotFound, "200001");
+        var response = await _parameterQueryRepository.GetParameters(request.key, request.category, request.language);
+        if (response == null || !response.Any())
+            return this.FailResponse<List<ParameterEntity>?>(HttpStatusCode.NotFound, "200001");
 
-        var response = parameters.Select(x => x.value).ToList();
-
-        return this.SuccessResponse(response);
+        return this.SuccessResponse<List<ParameterEntity>?>(response);
     }
 }

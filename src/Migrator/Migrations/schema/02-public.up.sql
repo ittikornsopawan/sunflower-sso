@@ -1,5 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
+
 CREATE SCHEMA IF NOT EXISTS public;
+
 CREATE TABLE IF NOT EXISTS m_parameters (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID,
@@ -13,13 +15,12 @@ CREATE TABLE IF NOT EXISTS m_parameters (
     deleted_at TIMESTAMP,
     deleted_by UUID,
     effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (
-        expires_at IS NULL
-        OR expires_at > effective_at
-    ),
-    category VARCHAR(128),
-    key VARCHAR(128) NOT NULL,
-    language VARCHAR(16),
+    expires_at TIMESTAMP CHECK (expires_at IS NULL OR expires_at > effective_at),
+    category VARCHAR(32),
+    key VARCHAR(32) NOT NULL,
+    title VARCHAR(128),
+    description TEXT,
+    language VARCHAR(8),
     value TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_m_parameters_key ON m_parameters(key);
@@ -41,6 +42,7 @@ COMMENT ON COLUMN m_parameters.category IS 'Category of the parameter';
 COMMENT ON COLUMN m_parameters.key IS 'Parameter key';
 COMMENT ON COLUMN m_parameters.language IS 'Language of the parameter value';
 COMMENT ON COLUMN m_parameters.value IS 'Parameter value';
+
 CREATE TABLE IF NOT EXISTS m_error_handlers (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
@@ -76,6 +78,7 @@ COMMENT ON COLUMN m_error_handlers.message IS 'Business Error Message';
 COMMENT ON COLUMN m_error_handlers.language IS 'Language of the parameter value';
 CREATE INDEX IF NOT EXISTS idx_m_error_handlers_code_language ON m_error_handlers(code, language);
 COMMENT ON INDEX idx_m_error_handlers_code_language IS 'Index to optimize queries filtering by error code and language.';
+
 CREATE TABLE IF NOT EXISTS t_addresses (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
@@ -89,10 +92,7 @@ CREATE TABLE IF NOT EXISTS t_addresses (
     deleted_at TIMESTAMP,
     deleted_by UUID REFERENCES authentication.t_users(id),
     effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (
-        expires_at IS NULL
-        OR expires_at > effective_at
-    ),
+    expires_at TIMESTAMP CHECK (expires_at IS NULL OR expires_at > effective_at),
     type VARCHAR(16) NOT NULL,
     address BYTEA NOT NULL,
     address_additional BYTEA,
@@ -138,6 +138,7 @@ CREATE INDEX IF NOT EXISTS idx_t_addresses_country_code_state_city ON t_addresse
 CREATE INDEX IF NOT EXISTS idx_t_addresses_geofence_area ON t_addresses USING GIST(geofence_area);
 COMMENT ON INDEX idx_t_addresses_country_code_state_city IS 'Index to optimize queries filtering by country code, state, and city.';
 COMMENT ON INDEX idx_t_addresses_geofence_area IS 'GIST index to optimize spatial queries on geofence areas.';
+
 CREATE TABLE IF NOT EXISTS t_contacts (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
@@ -177,6 +178,7 @@ COMMENT ON COLUMN t_contacts.available IS 'JSONB storing availability info';
 COMMENT ON COLUMN t_contacts.remark IS 'Additional notes';
 CREATE INDEX IF NOT EXISTS idx_t_contacts_channel_contact ON t_contacts(channel, contact);
 COMMENT ON INDEX idx_t_contacts_channel_contact IS 'Index to optimize queries filtering by contact channel and contact value.';
+
 CREATE TABLE IF NOT EXISTS t_files (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
@@ -190,10 +192,7 @@ CREATE TABLE IF NOT EXISTS t_files (
     deleted_at TIMESTAMP,
     deleted_by UUID REFERENCES authentication.t_users(id),
     effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (
-        expires_at IS NULL
-        OR expires_at > effective_at
-    ),
+    expires_at TIMESTAMP CHECK (expires_at IS NULL OR expires_at > effective_at),
     usage_type VARCHAR(32) CHECK (usage_type IN ('DOCUMENT', 'IMAGE', 'VIDEO')),
     file_path VARCHAR(512),
     file_name VARCHAR(128),
@@ -235,6 +234,7 @@ COMMENT ON COLUMN t_files.storage_bucket IS 'Storage bucket name';
 COMMENT ON COLUMN t_files.storage_key IS 'Storage object key';
 CREATE INDEX IF NOT EXISTS idx_t_files_file_name_file_extension ON t_files(file_name, file_extension);
 COMMENT ON INDEX idx_t_files_file_name_file_extension IS 'Index to optimize queries filtering by file name and extension.';
+
 CREATE TABLE IF NOT EXISTS t_personal_info (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
@@ -277,6 +277,7 @@ COMMENT ON COLUMN t_personal_info.gender IS 'Encrypted gender information (e.g.,
 COMMENT ON COLUMN t_personal_info.date_of_birth IS 'Encrypted date of birth of the person.';
 CREATE UNIQUE INDEX IF NOT EXISTS uq_t_personal_info_first_name_middle_name_last_name ON t_personal_info(first_name, middle_name, last_name);
 COMMENT ON INDEX uq_t_personal_info_first_name_middle_name_last_name IS 'Ensures uniqueness of the combination of first name, middle name, and last name in encrypted form.';
+
 CREATE TABLE IF NOT EXISTS t_personal_contacts (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
@@ -306,6 +307,7 @@ COMMENT ON COLUMN t_personal_contacts.deleted_at IS 'Timestamp when the record w
 COMMENT ON COLUMN t_personal_contacts.deleted_by IS 'Reference to the user who deleted the record.';
 COMMENT ON COLUMN t_personal_contacts.personal_id IS 'Reference to the personal information record (t_personal_info.id).';
 COMMENT ON COLUMN t_personal_contacts.contact_id IS 'Reference to the contact detail record (t_contacts.id).';
+
 CREATE TABLE IF NOT EXISTS t_personal_addresses (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),

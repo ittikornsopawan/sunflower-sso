@@ -1,5 +1,4 @@
 using System.Net;
-using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +18,7 @@ using Infrastructure.Persistence;
 
 using Shared.Configurations;
 using Shared.Common;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 

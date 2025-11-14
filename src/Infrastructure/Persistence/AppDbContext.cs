@@ -1,4 +1,4 @@
-using Domain.Entities;
+using Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -503,6 +503,8 @@ public class AppDbContext : DbContext
             entity.Property(e => e.expiresAt).HasColumnName("expires_at");
             entity.Property(e => e.category).HasColumnName("category");
             entity.Property(e => e.key).HasColumnName("key");
+            entity.Property(e => e.title).HasColumnName("title");
+            entity.Property(e => e.description).HasColumnName("description");
             entity.Property(e => e.language).HasColumnName("language");
             entity.Property(e => e.value).HasColumnName("value");
 

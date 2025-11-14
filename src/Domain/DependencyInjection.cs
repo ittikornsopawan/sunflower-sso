@@ -9,7 +9,6 @@ public static class DependencyInjection
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        // services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         RegisterByConvention(services, assembly, "DomainService", ServiceLifetime.Scoped);
 
         return services;
