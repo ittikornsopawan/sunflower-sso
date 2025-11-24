@@ -2,7 +2,7 @@ using System;
 
 namespace Domain.ValueObjects;
 
-public record TokenClaimValueObject
+public sealed record TokenClaimValueObject
 {
     public IReadOnlyDictionary<string, string> claims { get; init; }
 

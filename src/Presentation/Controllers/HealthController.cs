@@ -57,7 +57,7 @@ namespace Presentation.Controllers
             var response = await _mediator.Send(command);
 
             if (response.status.statusCode != HttpStatusCode.OK)
-                return this.ResponseHandler(HttpStatusCode.InternalServerError);
+                return this.ResponseHandler<string>(default!, HttpStatusCode.InternalServerError);
 
             return await Task.FromResult(this.ResponseHandler<string>("All dependencies are healthy", HttpStatusCode.OK));
         }

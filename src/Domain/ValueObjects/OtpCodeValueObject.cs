@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects;
 
-public record OtpCodeValueObject
+public sealed record OtpCodeValueObject
 {
     public string value { get; init; }
 

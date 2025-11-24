@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Authentication/Mapping/" />
+    <Folder Include="Authentication/Query/" />
     <Folder Include="Parameter/Command/" />
     <Folder Include="Parameter/Mapping/" />
   </ItemGroup>

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Domain.ValueObjects;
 
-public record EmailValueObject
+public sealed record EmailValueObject
 {
     public string value { get; init; }
 

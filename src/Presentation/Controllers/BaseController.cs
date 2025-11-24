@@ -47,19 +47,6 @@ public class BaseController : ControllerBase, IActionFilter
         _stopwatch.Stop();
         _duration = (int)_stopwatch.ElapsedMilliseconds;
     }
-
-    protected IActionResult ResponseHandler(HttpStatusCode statusCode = HttpStatusCode.OK)
-    {
-        return StatusCode((int)statusCode, new ResponseModel
-        {
-            status = new StatusResponseModel
-            {
-                statusCode = statusCode,
-                timestamp = DateTime.UtcNow
-            }
-        });
-    }
-
     protected IActionResult ResponseHandler(HttpStatusCode statusCode = HttpStatusCode.OK, string? bizErrorCode = null)
     {
         return StatusCode((int)statusCode, new ResponseModel
@@ -68,13 +55,12 @@ public class BaseController : ControllerBase, IActionFilter
             {
                 statusCode = statusCode,
                 bizErrorCode = bizErrorCode,
-                bizErrorMessage = ErrorHandlerExtension.GetErrorMessage(bizErrorCode ?? string.Empty),
                 timestamp = DateTime.UtcNow
             }
         });
     }
 
-    protected IActionResult ResponseHandler<T>(T result, HttpStatusCode statusCode = HttpStatusCode.OK, string? bizErrorCode = null)
+    protected IActionResult ResponseHandler<T>(T data, HttpStatusCode statusCode = HttpStatusCode.OK, string? bizErrorCode = null)
     {
         return StatusCode((int)statusCode, new ResponseModel<T>
         {
@@ -82,10 +68,9 @@ public class BaseController : ControllerBase, IActionFilter
             {
                 statusCode = statusCode,
                 bizErrorCode = bizErrorCode,
-                bizErrorMessage = ErrorHandlerExtension.GetErrorMessage(bizErrorCode ?? string.Empty),
                 timestamp = DateTime.UtcNow
             },
-            data = result
+            data = data
         });
     }
 }

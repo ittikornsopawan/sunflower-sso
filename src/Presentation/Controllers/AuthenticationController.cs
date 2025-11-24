@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Presentation.Models.Authentication;
 using Shared.Configurations;
 
 namespace Presentation.Controllers
@@ -16,7 +17,7 @@ namespace Presentation.Controllers
 
         [AllowAnonymous]
         [HttpPost("v1/register")]
-        public IActionResult Register()
+        public IActionResult Register([FromBody] RegisterModel request)
         {
             return Ok();
         }
@@ -44,7 +45,7 @@ namespace Presentation.Controllers
 
         [AllowAnonymous]
         [HttpPost("v1/login")]
-        public IActionResult Login()
+        public IActionResult Login([FromBody] LoginModel request)
         {
             return Ok();
         }

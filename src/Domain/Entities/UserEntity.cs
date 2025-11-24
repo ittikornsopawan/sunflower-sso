@@ -8,11 +8,18 @@ public class UserEntity : AggregateRoot
 {
     public UserCodeValueObject code { get; private set; }
     public UsernameValueObject username { get; private set; }
+    public AuthenticationTypeValueObject authenticationType { get; private set; }
 
-    public UserEntity(UserCodeValueObject code, UsernameValueObject username, Guid? id = null)
+    public UserEntity(
+        UserCodeValueObject code,
+        UsernameValueObject username,
+        AuthenticationTypeValueObject authenticationType,
+        Guid? id = null
+    )
     {
         this.id = id ?? Guid.NewGuid();
         this.code = code;
         this.username = username;
+        this.authenticationType = authenticationType;
     }
 }

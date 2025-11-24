@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace Domain.ValueObjects;
 
-public record LanguageValueObject
+public sealed record LanguageValueObject
 {
     public string value { get; init; }
 

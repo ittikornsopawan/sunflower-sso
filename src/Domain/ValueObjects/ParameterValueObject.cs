@@ -2,7 +2,7 @@ using System;
 
 namespace Domain.ValueObjects;
 
-public record ParameterValue
+public sealed record ParameterValue
 {
     public string value { get; init; }
 

@@ -1,6 +1,6 @@
 namespace Domain.ValueObjects;
 
-public record class UserCodeValueObject
+public sealed record class UserCodeValueObject
 {
     public string value { get; init; }
 

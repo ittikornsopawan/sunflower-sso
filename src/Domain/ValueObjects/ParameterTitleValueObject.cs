@@ -1,6 +1,6 @@
 namespace Domain.ValueObjects;
 
-public record class ParameterTitleValueObject
+public sealed record class ParameterTitleValueObject
 {
     public string value { get; init; }
 

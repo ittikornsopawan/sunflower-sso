@@ -2,10 +2,10 @@ using System;
 
 namespace Domain.ValueObjects;
 
-public record AccessTokenValueObject
+public sealed record AccessTokenValueObject
 {
-    public string Token { get; init; }
-    public DateTime Expiry { get; init; }
+    public string token { get; init; }
+    public DateTime expiry { get; init; }
 
     public AccessTokenValueObject(string token, DateTime expiry)
     {
@@ -15,11 +15,11 @@ public record AccessTokenValueObject
         if (expiry <= DateTime.UtcNow)
             throw new ArgumentException("Expiry must be in the future.", nameof(expiry));
 
-        Token = token;
-        Expiry = expiry;
+        this.token = token;
+        this.expiry = expiry;
     }
 
-    public bool IsExpired => DateTime.UtcNow >= Expiry;
+    public bool IsExpired => DateTime.UtcNow >= this.expiry;
 
-    public override string ToString() => Token;
+    public override string ToString() => this.token;
 }

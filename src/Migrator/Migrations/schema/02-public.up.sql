@@ -151,9 +151,7 @@ CREATE TABLE IF NOT EXISTS t_contacts (
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     deleted_at TIMESTAMP,
     deleted_by UUID REFERENCES authentication.t_users(id),
-    channel VARCHAR(16) NOT NULL CHECK (
-        channel in ('MOBILE', 'EMAIL', 'FAX', 'SOCIAL_MEDIA')
-    ),
+    channel VARCHAR(16) NOT NULL CHECK (channel in ('MOBILE', 'EMAIL', 'FAX', 'SOCIAL_MEDIA')),
     contact VARCHAR(128) NOT NULL,
     contact_name VARCHAR(512) NOT NULL,
     available JSONB,

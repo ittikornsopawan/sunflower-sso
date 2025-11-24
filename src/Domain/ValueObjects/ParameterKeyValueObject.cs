@@ -1,6 +1,6 @@
 namespace Domain.ValueObjects;
 
-public record class ParameterKeyValueObject
+public sealed record class ParameterKeyValueObject
 {
     public string value { get; init; }
 

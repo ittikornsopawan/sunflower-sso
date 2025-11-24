@@ -6,14 +6,14 @@ using Domain.Interfaces.Repository;
 using Shared.Common;
 using Shared.DTOs;
 using Domain.Entities;
+using Infrastructure.Persistence;
 
 namespace Application.Parameter.Query;
 
 public class ParameterQueryHandler : CommonHandler, IRequestHandler<ParameterQuery, ResponseModel<List<ParameterEntity>?>>
 {
     private readonly IParameterQueryRepository _parameterQueryRepository;
-
-    public ParameterQueryHandler(IParameterQueryRepository parameterQueryRepository)
+    public ParameterQueryHandler(AppDbContext dbContext, IParameterQueryRepository parameterQueryRepository) : base(dbContext)
     {
         _parameterQueryRepository = parameterQueryRepository;
     }

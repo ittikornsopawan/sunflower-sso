@@ -50,7 +50,7 @@ namespace Presentation.Controllers
                 return this.ResponseHandler(response.status.statusCode, response.status.bizErrorCode);
 
             if (response.data == null || !response.data.Any())
-                return this.ResponseHandler(HttpStatusCode.NotFound);
+                return this.ResponseHandler<List<ParameterEntity>>(default!, HttpStatusCode.NotFound);
 
             return this.ResponseHandler<List<ParameterEntity>>(response.data!, HttpStatusCode.OK);
         }

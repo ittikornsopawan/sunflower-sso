@@ -33,6 +33,7 @@ public class UserAuthenticationQueryRepository : BaseRepository, IUserAuthentica
         var domainList = dbList.Select(db => new UserEntity(
             new UserCodeValueObject(db.code),
             new UsernameValueObject(db.username),
+            new AuthenticationTypeValueObject(db.authenticationType),
             db.id
         )).ToList();
 

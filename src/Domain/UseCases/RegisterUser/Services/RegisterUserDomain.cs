@@ -10,8 +10,7 @@ public class RegisterUserDomain
 
     }
 
-    public async Task Register(UsernameValueObject username, PasswordHashValueObject password)
+    public async Task Register(UsernameValueObject username, PasswordValueObject password)
     {
-
     }
 }
