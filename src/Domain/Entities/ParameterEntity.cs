@@ -6,17 +6,17 @@ namespace Domain.Entities;
 
 public class ParameterEntity : AggregateRoot
 {
-    public EffectivePeriodValueObject EffectivePeriod { get; private set; }
-    public ParameterCategoryValueObject? Category { get; private set; }
-    public ParameterKeyValueObject Key { get; private set; }
-    public ParameterTitleValueObject? Title { get; private set; }
-    public ParameterDescriptionValueObject? Description { get; private set; }
-    public LanguageValueObject? Language { get; private set; }
-    public ParameterValue? Value { get; private set; }
+    public EffectivePeriodValueObject period { get; private set; }
+    public ParameterCategoryValueObject? category { get; private set; }
+    public ParameterKeyValueObject key { get; private set; }
+    public ParameterTitleValueObject? title { get; private set; }
+    public ParameterDescriptionValueObject? description { get; private set; }
+    public LanguageValueObject? language { get; private set; }
+    public ParameterValue? value { get; private set; }
 
     public ParameterEntity(
         ParameterKeyValueObject key,
-        EffectivePeriodValueObject effectivePeriod,
+        EffectivePeriodValueObject period,
         ParameterCategoryValueObject? category = null,
         ParameterTitleValueObject? title = null,
         ParameterDescriptionValueObject? description = null,
@@ -26,12 +26,12 @@ public class ParameterEntity : AggregateRoot
     )
     {
         this.id = id ?? Guid.NewGuid();
-        Key = key;
-        EffectivePeriod = effectivePeriod;
-        Category = category;
-        Title = title;
-        Description = description;
-        Language = language;
-        Value = value;
+        this.key = key;
+        this.period = period;
+        this.category = category;
+        this.title = title;
+        this.description = description;
+        this.language = language;
+        this.value = value;
     }
 }

@@ -4,7 +4,7 @@ using Domain.ValueObjects;
 
 namespace Domain.Entities;
 
-public class OtpEntity : AggregateRoot
+public sealed record OtpEntity : AggregateRoot
 {
     public Guid UserId { get; private set; }
     public OtpCodeValueObject Code { get; private set; }

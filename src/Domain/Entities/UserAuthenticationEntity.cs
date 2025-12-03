@@ -6,17 +6,25 @@ namespace Domain.Entities;
 
 public class UserAuthenticationEntity : AggregateRoot
 {
+    public EffectivePeriodValueObject period { get; init; }
+    public UserIdValueObject userId { get; init; }
+    public FlagsAttribute isTemporary { get; init; }
+    public AlgorithmValueObject algorithm { get; init; }
     public PasswordValueObject password { get; private set; }
-    public EffectivePeriodValueObject period { get; private set; }
-    public UserIdValueObject userId { get; private set; }
-    public AlgorithmValueObject algorithm { get; private set; }
 
-    public UserAuthenticationEntity(UserIdValueObject userId, PasswordValueObject password, EffectivePeriodValueObject period, AlgorithmValueObject algorithm)
+    public UserAuthenticationEntity(
+        UserIdValueObject userId,
+        PasswordValueObject password,
+        EffectivePeriodValueObject period,
+        AlgorithmValueObject algorithm,
+        FlagsAttribute isTemporary
+    )
     {
-        this.userId = userId;
-        this.password = password;
         this.period = period;
+        this.userId = userId;
+        this.isTemporary = isTemporary;
         this.algorithm = algorithm;
+        this.password = password;
     }
 
     public void UpdatePassword(PasswordValueObject newPassword)

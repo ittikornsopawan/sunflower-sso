@@ -16,6 +16,7 @@
     <Folder Include="UseCases/Authorization/" />
     <Folder Include="UseCases/Authorization/Events/" />
     <Folder Include="UseCases/Authorization/Services/" />
+    <Folder Include="UseCases/Key/Events/" />
     <Folder Include="UseCases/LoginUser/" />
     <Folder Include="UseCases/LoginUser/Events/" />
     <Folder Include="UseCases/LoginUser/Services/" />

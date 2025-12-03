@@ -1,16 +1,22 @@
 using System;
+using Domain.Entities;
 using Domain.ValueObjects;
 
 namespace Domain.UseCases.RegisterUser.Services;
 
-public class RegisterUserDomain
+public interface IRegisterUserDomain
+{
+    Task Register(UserEntity entity);
+}
+
+public class RegisterUserDomain : IRegisterUserDomain
 {
     public RegisterUserDomain()
     {
 
     }
 
-    public async Task Register(UsernameValueObject username, PasswordValueObject password)
+    public async Task Register(UserEntity entity)
     {
     }
 }
