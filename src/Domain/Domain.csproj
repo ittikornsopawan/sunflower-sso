@@ -17,6 +17,7 @@
     <Folder Include="UseCases/Authorization/Events/" />
     <Folder Include="UseCases/Authorization/Services/" />
     <Folder Include="UseCases/Key/Events/" />
+    <Folder Include="UseCases/Key/Services/" />
     <Folder Include="UseCases/LoginUser/" />
     <Folder Include="UseCases/LoginUser/Events/" />
     <Folder Include="UseCases/LoginUser/Services/" />
@@ -24,6 +25,7 @@
     <Folder Include="UseCases/OTP/Events/" />
     <Folder Include="UseCases/OTP/Services/" />
     <Folder Include="UseCases/RegisterUser/Events/" />
+    <Folder Include="UseCases/RegisterUser/Services/" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,7 +17,7 @@ public class AlgorithmEntity : AggregateRoot
     public NameValueObject name { get; private set; }
     private byte[] algorithm { get; set; }
     public EffectivePeriodValueObject period { get; private set; }
-    public object? keyRequired { get; private set; }
+    public string? keyRequired { get; private set; }
 
     /// <summary>
     /// Returns the algorithm as a UTF-8 string.
@@ -28,7 +28,7 @@ public class AlgorithmEntity : AggregateRoot
         NameValueObject name,
         byte[] algorithm,
         EffectivePeriodValueObject period,
-        object? keyRequired = null,
+        string? keyRequired = null,
         Guid? id = null
     )
     {
@@ -42,9 +42,7 @@ public class AlgorithmEntity : AggregateRoot
     /// <summary>
     /// Checks if the algorithm is currently effective.
     /// </summary>
-    public bool IsEffective() =>
-        DateTime.UtcNow >= period.effectiveAt &&
-        (period.expiresAt == null || DateTime.UtcNow <= period.expiresAt);
+    public bool IsEffective() => DateTime.UtcNow >= period.effectiveAt && (period.expiresAt == null || DateTime.UtcNow <= period.expiresAt);
 
     /// <summary>
     /// Updates the algorithm with new byte[] and refreshes the string value.
@@ -55,5 +53,10 @@ public class AlgorithmEntity : AggregateRoot
             throw new ArgumentException("Algorithm cannot be null or empty.", nameof(newAlgorithm));
 
         algorithm = newAlgorithm;
+    }
+
+    public override string ToString()
+    {
+        return algorithm != null ? Encoding.UTF8.GetString(algorithm) : string.Empty;
     }
 }

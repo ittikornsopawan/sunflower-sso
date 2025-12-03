@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Authentication/Command/" />
     <Folder Include="Authentication/Mapping/" />
     <Folder Include="Authentication/Query/" />
     <Folder Include="Parameter/Command/" />
