@@ -12,25 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Entities/" />
     <Folder Include="Interfaces/Gateway/" />
-    <Folder Include="UseCases/Authorization/" />
-    <Folder Include="UseCases/Authorization/Events/" />
-    <Folder Include="UseCases/Authorization/Services/" />
-    <Folder Include="UseCases/Key/Events/" />
-    <Folder Include="UseCases/Key/Services/" />
-    <Folder Include="UseCases/LoginUser/" />
-    <Folder Include="UseCases/LoginUser/Events/" />
-    <Folder Include="UseCases/LoginUser/Services/" />
-    <Folder Include="UseCases/OTP/" />
-    <Folder Include="UseCases/OTP/Events/" />
-    <Folder Include="UseCases/OTP/Services/" />
-    <Folder Include="UseCases/RegisterUser/Events/" />
-    <Folder Include="UseCases/RegisterUser/Services/" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Entities/OtpEntity.cs" />
-    <None Include="Entities/UserEntity.cs" />
+    <Folder Include="Interfaces/Repository/" />
+    <Folder Include="UseCases/" />
   </ItemGroup>
 
   <ItemGroup>

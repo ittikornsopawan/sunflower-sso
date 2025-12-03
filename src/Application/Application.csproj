@@ -18,8 +18,11 @@
     <Folder Include="Authentication/Command/" />
     <Folder Include="Authentication/Mapping/" />
     <Folder Include="Authentication/Query/" />
+    <Folder Include="Authentication/Validator/" />
     <Folder Include="Parameter/Command/" />
     <Folder Include="Parameter/Mapping/" />
+    <Folder Include="Parameter/Query/" />
+    <Folder Include="Parameter/Validator/" />
   </ItemGroup>
 
   <PropertyGroup>

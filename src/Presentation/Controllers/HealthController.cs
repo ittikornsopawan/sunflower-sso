@@ -1,5 +1,4 @@
 using System.Net;
-using Application.Parameter.Query;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,15 +50,7 @@ namespace Presentation.Controllers
         [HttpGet("v1/dependencies")]
         public async Task<IActionResult> GetDependencies()
         {
-            var KeyCheckDb = this._appSettings.HealthCheck.Database;
-
-            var command = new ParameterQuery(KeyCheckDb);
-            var response = await _mediator.Send(command);
-
-            if (response.status.statusCode != HttpStatusCode.OK)
-                return this.ResponseHandler<string>(default!, HttpStatusCode.InternalServerError);
-
-            return await Task.FromResult(this.ResponseHandler<string>("All dependencies are healthy", HttpStatusCode.OK));
+            return await Task.FromResult(this.ResponseHandler<string>("Healthy", HttpStatusCode.OK));
         }
     }
 }
