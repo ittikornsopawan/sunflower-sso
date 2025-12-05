@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS audit.t_request_logs
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
     endpoint TEXT NOT NULL,
     method TEXT NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS audit.t_change_logs
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     table_name TEXT NOT NULL,
     record_id UUID NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS audit.t_change_log_items
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     header_id UUID NOT NULL REFERENCES audit.t_change_logs(id),
     column_name TEXT NOT NULL,

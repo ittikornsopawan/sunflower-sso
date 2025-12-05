@@ -5,20 +5,20 @@ CREATE TABLE IF NOT EXISTS key.m_algorithms
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID,
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID,
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID,
 
-    effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
+    effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
 
     name VARCHAR(128) NOT NULL,
     algorithm BYTEA NOT NULL,
@@ -48,21 +48,21 @@ COMMENT ON INDEX key.idx_m_algorithms_name IS 'Unique index to ensure algorithm 
 CREATE TABLE IF NOT EXISTS key.m_key_types
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
-     created_by UUID,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID,
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID,
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID,
 
-    effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
+    effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
 
     name VARCHAR(128) NOT NULL,
     title VARCHAR(512),
@@ -92,21 +92,21 @@ COMMENT ON INDEX key.idx_m_key_types_name IS 'Unique index to ensure key type na
 CREATE TABLE IF NOT EXISTS key.m_keys
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
-     created_by UUID,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by UUID,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID,
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID,
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID,
 
-    effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
+    effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
 
     type_id UUID NOT NULL REFERENCES key.m_key_types(id),
     key BYTEA NOT NULL

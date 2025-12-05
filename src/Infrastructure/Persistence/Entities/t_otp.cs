@@ -6,7 +6,9 @@ namespace Infrastructure.Persistence.Entities;
 public class t_otp : AuditableEntity
 {
     public DateTime expiresAt { get; set; }
+    public required string purpose { get; set; }
     public required string refCode { get; set; }
     public required string otp { get; set; }
-    public int verifyCount { get; set; } = 0;
+    public int attempts { get; set; } = 0;
+    public required string result { get; set; }
 }

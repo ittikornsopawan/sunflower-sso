@@ -9,7 +9,7 @@ public static class DependencyInjection
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        RegisterByConvention(services, assembly, "DomainService", ServiceLifetime.Scoped);
+        RegisterByConvention(services, assembly, "Service", ServiceLifetime.Scoped);
 
         return services;
     }

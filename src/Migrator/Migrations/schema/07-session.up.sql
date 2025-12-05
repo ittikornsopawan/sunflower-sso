@@ -5,28 +5,28 @@ CREATE TABLE IF NOT EXISTS session.t_sessions
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
 
     is_revoked BOOLEAN NOT NULL DEFAULT FALSE,
-    revoked_at TIMESTAMP,
+    revoked_at TIMESTAMP WITHOUT TIME ZONE,
     revoked_by UUID REFERENCES authentication.t_users(id),
     revoked_reason TEXT,
 
-    expires_at TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE,
 
     user_id UUID NOT NULL REFERENCES authentication.t_users(id),
 
     code VARCHAR(32) NOT NULL,
     access_token BYTEA NOT NULL,
-    access_token_expires_at TIMESTAMP NOT NULL,
+    access_token_expires_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     refresh_access_token BYTEA NOT NULL,
-    refresh_access_token_expires_at TIMESTAMP NOT NULL,
+    refresh_access_token_expires_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     payload JSONB NOT NULL
 );
 COMMENT ON TABLE session.t_sessions IS 'Stores session information and tokens for users';

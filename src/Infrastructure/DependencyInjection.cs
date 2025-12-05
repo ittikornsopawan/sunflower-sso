@@ -17,6 +17,7 @@ public static class DependencyInjection
 
         RegisterByConvention(services, assembly, "Repository", ServiceLifetime.Scoped);
         RegisterByConvention(services, assembly, "Service", ServiceLifetime.Scoped);
+        RegisterByConvention(services, assembly, "Gateway", ServiceLifetime.Scoped);
 
         return services;
     }

@@ -55,6 +55,15 @@ public class AppDbContext : DbContext
     public DbSet<t_session_attributes> t_session_attributes { get; set; }
     public DbSet<t_sessions> t_sessions { get; set; }
 
+    //notification
+    public DbSet<t_notification_templates> t_notification_templates { get; set; }
+    public DbSet<t_notifications> t_notifications { get; set; }
+
+    //consent
+    public DbSet<m_consent_types> m_consent_types { get; set; }
+    public DbSet<t_consents> t_consents { get; set; }
+    public DbSet<t_user_consents> t_user_consents { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<t_change_logs>(entity =>
@@ -413,9 +422,13 @@ public class AppDbContext : DbContext
             entity.Property(e => e.deletedAt).HasColumnName("deleted_at");
             entity.Property(e => e.deletedById).HasColumnName("deleted_by");
             entity.Property(e => e.expiresAt).HasColumnName("expires_at");
+            entity.Property(e => e.purpose).HasColumnName("purpose");
             entity.Property(e => e.refCode).HasColumnName("ref_code");
             entity.Property(e => e.otp).HasColumnName("otp");
-            entity.Property(e => e.verifyCount).HasColumnName("verify_count");
+            entity.Property(e => e.attempts).HasColumnName("attempts");
+            entity.Property(e => e.result).HasColumnName("result");
+
+            entity.Ignore(e => e.code);
         });
 
         modelBuilder.Entity<t_otp_logs>(entity =>
@@ -428,7 +441,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.createdAt).HasColumnName("created_at");
             entity.Property(e => e.otpId).HasColumnName("otp_id");
             entity.Property(e => e.countNo).HasColumnName("count_no");
-            entity.Property(e => e.context).HasColumnName("context");
+            entity.Property(e => e.purpose).HasColumnName("purpose");
             entity.Property(e => e.ipAddress).HasColumnName("ip_address");
             entity.Property(e => e.deviceId).HasColumnName("device_id");
             entity.Property(e => e.deviceOs).HasColumnName("device_os");
@@ -732,6 +745,118 @@ public class AppDbContext : DbContext
             entity.Property(e => e.refreshAccessToken).HasColumnName("refresh_access_token");
             entity.Property(e => e.refreshAccessTokenExpiresAt).HasColumnName("refresh_access_token_expires_at");
             entity.Property(e => e.payload).HasColumnName("payload");
+        });
+
+        modelBuilder.Entity<t_notifications>(entity =>
+        {
+            entity.ToTable("t_notifications", "notification");
+
+            entity.HasKey(e => e.id);
+            entity.Property(e => e.id).HasColumnName("id");
+            entity.Property(e => e.createdById).HasColumnName("created_by");
+            entity.Property(e => e.createdAt).HasColumnName("created_at");
+            entity.Property(e => e.type).HasColumnName("type");
+            entity.Property(e => e.contact).HasColumnName("contact");
+            entity.Property(e => e.message).HasColumnName("message");
+            entity.Property(e => e.status).HasColumnName("status");
+            entity.Property(e => e.retryCount).HasColumnName("retry_count");
+        });
+
+        modelBuilder.Entity<t_notification_templates>(entity =>
+        {
+            entity.ToTable("t_notification_templates", "notification");
+
+            entity.HasKey(e => e.id);
+            entity.Property(e => e.id).HasColumnName("id");
+            entity.Property(e => e.createdById).HasColumnName("created_by");
+            entity.Property(e => e.createdAt).HasColumnName("created_at");
+            entity.Property(e => e.updatedById).HasColumnName("updated_by");
+            entity.Property(e => e.updatedAt).HasColumnName("updated_at");
+            entity.Property(e => e.isActive).HasColumnName("is_active");
+            entity.Property(e => e.inactiveAt).HasColumnName("inactive_at");
+            entity.Property(e => e.inactiveById).HasColumnName("inactive_by");
+            entity.Property(e => e.isDeleted).HasColumnName("is_deleted");
+            entity.Property(e => e.deletedAt).HasColumnName("deleted_at");
+            entity.Property(e => e.deletedById).HasColumnName("deleted_by");
+            entity.Property(e => e.key).HasColumnName("key");
+            entity.Property(e => e.version).HasColumnName("version");
+            entity.Property(e => e.name).HasColumnName("name");
+            entity.Property(e => e.type).HasColumnName("type");
+            entity.Property(e => e.subject).HasColumnName("subject");
+            entity.Property(e => e.isHtml).HasColumnName("is_html");
+            entity.Property(e => e.content).HasColumnName("content");
+            entity.Property(e => e.variables).HasColumnName("variables");
+        });
+
+        modelBuilder.Entity<m_consent_types>(entity =>
+        {
+            entity.ToTable("m_consent_types", "consent");
+
+            entity.HasKey(e => e.id);
+            entity.Property(e => e.id).HasColumnName("id");
+            entity.Property(e => e.createdById).HasColumnName("created_by");
+            entity.Property(e => e.createdAt).HasColumnName("created_at");
+            entity.Property(e => e.updatedById).HasColumnName("updated_by");
+            entity.Property(e => e.updatedAt).HasColumnName("updated_at");
+            entity.Property(e => e.isActive).HasColumnName("is_active");
+            entity.Property(e => e.inactiveAt).HasColumnName("inactive_at");
+            entity.Property(e => e.inactiveById).HasColumnName("inactive_by");
+            entity.Property(e => e.isDeleted).HasColumnName("is_deleted");
+            entity.Property(e => e.deletedAt).HasColumnName("deleted_at");
+            entity.Property(e => e.deletedById).HasColumnName("deleted_by");
+            entity.Property(e => e.name).HasColumnName("name");
+            entity.Property(e => e.description).HasColumnName("description");
+            entity.Property(e => e.isRequired).HasColumnName("is_required");
+            entity.Property(e => e.latestVersion).HasColumnName("latest_version");
+        });
+
+        modelBuilder.Entity<t_consents>(entity =>
+        {
+            entity.ToTable("t_consents", "consent");
+
+            entity.HasKey(e => e.id);
+            entity.Property(e => e.id).HasColumnName("id");
+            entity.Property(e => e.createdById).HasColumnName("created_by");
+            entity.Property(e => e.createdAt).HasColumnName("created_at");
+            entity.Property(e => e.updatedById).HasColumnName("updated_by");
+            entity.Property(e => e.updatedAt).HasColumnName("updated_at");
+            entity.Property(e => e.isActive).HasColumnName("is_active");
+            entity.Property(e => e.inactiveAt).HasColumnName("inactive_at");
+            entity.Property(e => e.inactiveById).HasColumnName("inactive_by");
+            entity.Property(e => e.isDeleted).HasColumnName("is_deleted");
+            entity.Property(e => e.deletedAt).HasColumnName("deleted_at");
+            entity.Property(e => e.deletedById).HasColumnName("deleted_by");
+            entity.Property(e => e.consentTypeId).HasColumnName("consent_type_id");
+            entity.Property(e => e.version).HasColumnName("version");
+            entity.Property(e => e.name).HasColumnName("name");
+            entity.Property(e => e.description).HasColumnName("description");
+            entity.Property(e => e.content).HasColumnName("content");
+            entity.Property(e => e.language).HasColumnName("language");
+        });
+
+        modelBuilder.Entity<t_user_consents>(entity =>
+        {
+            entity.ToTable("t_user_consents", "consent");
+
+            entity.HasKey(e => e.id);
+            entity.Property(e => e.id).HasColumnName("id");
+            entity.Property(e => e.createdById).HasColumnName("created_by");
+            entity.Property(e => e.createdAt).HasColumnName("created_at");
+            entity.Property(e => e.updatedById).HasColumnName("updated_by");
+            entity.Property(e => e.updatedAt).HasColumnName("updated_at");
+            entity.Property(e => e.isActive).HasColumnName("is_active");
+            entity.Property(e => e.inactiveAt).HasColumnName("inactive_at");
+            entity.Property(e => e.inactiveById).HasColumnName("inactive_by");
+            entity.Property(e => e.isDeleted).HasColumnName("is_deleted");
+            entity.Property(e => e.deletedAt).HasColumnName("deleted_at");
+            entity.Property(e => e.deletedById).HasColumnName("deleted_by");
+            entity.Property(e => e.consentTypeId).HasColumnName("consent_type_id");
+            entity.Property(e => e.version).HasColumnName("version");
+            entity.Property(e => e.userId).HasColumnName("user_id");
+            entity.Property(e => e.consentTypeId).HasColumnName("consent_type_id");
+            entity.Property(e => e.consentId).HasColumnName("consent_id");
+            entity.Property(e => e.version).HasColumnName("version");
+            entity.Property(e => e.result).HasColumnName("result");
         });
     }
 }

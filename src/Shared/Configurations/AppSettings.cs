@@ -9,6 +9,7 @@ public class AppSettings
     public RedisOptions Redis { get; set; } = new();
     public EncryptionOptions Encryption { get; set; } = new();
     public EncryptionOptions DbEncryption { get; set; } = new();
+    public EmailSettings EmailSettings { get; set; } = new();
     public TokenOptions Token { get; set; } = new();
     public PaginationOptions Pagination { get; set; } = new();
     public HealthCheck HealthCheck { get; set; } = new();
@@ -47,4 +48,16 @@ public class PaginationOptions
 public class HealthCheck
 {
     public string Database { get; set; } = default!;
+}
+
+public class EmailSettings
+{
+    public string Host { get; set; } = default!;
+    public int Port { get; set; }
+    public bool EnableSsl { get; set; }
+    public string Username { get; set; } = default!;
+    public string Password { get; set; } = default!;
+    public string From { get; set; } = default!;
+    public int RetryAttempt { get; set; } = 3;
+    public int RetryDelay { get; set; } = 500;
 }

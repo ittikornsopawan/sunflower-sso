@@ -12,10 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities/" />
     <Folder Include="Interfaces/Gateway/" />
-    <Folder Include="Interfaces/Repository/" />
-    <Folder Include="UseCases/" />
+    <Folder Include="UseCases/Notification/Events/" />
+    <Folder Include="UseCases/Otp/Events/" />
   </ItemGroup>
 
   <ItemGroup>

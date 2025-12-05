@@ -4,24 +4,26 @@ COMMENT ON SCHEMA otp IS 'Schema for managing one-time passwords (OTPs) for mult
 CREATE TABLE IF NOT EXISTS otp.t_otp
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
-    created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    created_by UUID NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE,
+    updated_by UUID,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
 
-    expires_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL '15 minutes',
+    expires_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL '15 minutes',
 
+    purpose VARCHAR(32) NOT NULL CHECK (purpose IN ('LOGIN', 'VERIFY', 'CONFIRM', 'RESET_PASSWORD', 'OTHER')),
     ref_code VARCHAR(16) NOT NULL,
     otp VARCHAR(8) NOT NULL,
-    verify_count INT NOT NULL DEFAULT 0
+    attempts INT NOT NULL DEFAULT 0,
+    result VARCHAR(16) NOT NULL CHECK (result IN ('PENDING', 'SUCCESS','FAILED','EXPIRED'))
 );
 COMMENT ON TABLE otp.t_otp IS 'Stores OTP records for verification with reference code.';
 COMMENT ON COLUMN otp.t_otp.id IS 'Primary key for OTP record.';
@@ -36,9 +38,11 @@ COMMENT ON COLUMN otp.t_otp.is_deleted IS 'Indicates if the OTP record is delete
 COMMENT ON COLUMN otp.t_otp.deleted_at IS 'Timestamp when the OTP record was deleted.';
 COMMENT ON COLUMN otp.t_otp.deleted_by IS 'User who deleted the OTP record.';
 COMMENT ON COLUMN otp.t_otp.expires_at IS 'Expiration timestamp of the OTP.';
+COMMENT ON COLUMN otp.t_otp.purpose IS 'Purpose of the OTP: LOGIN, VERIFY, CONFIRM, RESET_PASSWORD, OTHER.';
 COMMENT ON COLUMN otp.t_otp.ref_code IS 'Reference code for which the OTP was generated.';
 COMMENT ON COLUMN otp.t_otp.otp IS 'The one-time password value.';
-COMMENT ON COLUMN otp.t_otp.verify_count IS 'Number of verification attempts made for this OTP.';
+COMMENT ON COLUMN otp.t_otp.attempts IS 'Number of verification attempts made for this OTP.';
+COMMENT ON COLUMN otp.t_otp.result IS 'Result of the OTP verification: PENDING, SUCCESS, FAILED, EXPIRED.';
 
 CREATE INDEX IF NOT EXISTS idx_t_otp_code ON otp.t_otp(ref_code);
 COMMENT ON INDEX otp.idx_t_otp_code IS 'Index to optimize queries filtering by reference code.';
@@ -47,12 +51,12 @@ CREATE TABLE IF NOT EXISTS otp.t_otp_logs
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     otp_id UUID NOT NULL REFERENCES otp.t_otp(id),
     count_no INT NOT NULL DEFAULT 1,
 
-    context VARCHAR(32) NOT NULL CHECK (context IN ('LOGIN', 'CONFIRM', 'RESET_PASSWORD', 'OTHER')),
+    purpose VARCHAR(32) NOT NULL CHECK (purpose IN ('LOGIN', 'VERIFY', 'CONFIRM', 'RESET_PASSWORD', 'OTHER')),
     ip_address INET,
     device_id TEXT,
     device_os TEXT,
@@ -73,7 +77,7 @@ COMMENT ON COLUMN otp.t_otp_logs.created_by IS 'User who performed the OTP verif
 COMMENT ON COLUMN otp.t_otp_logs.created_at IS 'Timestamp when the OTP log record was created.';
 COMMENT ON COLUMN otp.t_otp_logs.otp_id IS 'Reference to the OTP record (otp.t_otp.id) being verified.';
 COMMENT ON COLUMN otp.t_otp_logs.count_no IS 'Sequential count number for multiple attempts on the same OTP.';
-COMMENT ON COLUMN otp.t_otp_logs.context IS 'Context for the OTP check: LOGIN, CONFIRM, RESET_PASSWORD, OTHER.';
+COMMENT ON COLUMN otp.t_otp_logs.purpose IS 'Purpose for the OTP check: LOGIN, VERIFY, CONFIRM, RESET_PASSWORD, OTHER.';
 COMMENT ON COLUMN otp.t_otp_logs.ip_address IS 'IP address from which the OTP verification was attempted.';
 COMMENT ON COLUMN otp.t_otp_logs.device_id IS 'Identifier of the device used for OTP verification.';
 COMMENT ON COLUMN otp.t_otp_logs.device_os IS 'Operating system of the device used for OTP verification.';

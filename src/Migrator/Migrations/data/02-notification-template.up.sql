@@ -1,0 +1,2 @@
+INSERT INTO notification.t_notification_templates (id, created_by, created_at, is_active, key, version, name, type, subject, is_html, content, variables)
+VALUES ('11111111-1111-1111-1111-111111111118', '00000000-0000-0000-0000-000000000000', CURRENT_TIMESTAMP, TRUE, 'EMAIL_OTP', '1.0.0', 'Email OTP Template', 'EMAIL', 'Your OTP Code', TRUE, '<p>Your OTP code is <strong>{{otp}}</strong>. It will expire in {{expiry_minutes}} minutes.</p>', '{"otp": "string", "expiry_minutes": "number"}'::jsonb);

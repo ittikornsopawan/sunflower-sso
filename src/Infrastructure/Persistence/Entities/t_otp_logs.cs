@@ -8,7 +8,7 @@ public class t_otp_logs : AuditableEntity
 {
     public required string otpId { get; set; }
     public int countNo { get; set; }
-    public required string context { get; set; }
+    public required string purpose { get; set; }
     public string ipAddress { get; set; } = default!;
     public string deviceId { get; set; } = default!;
     public string deviceOs { get; set; } = default!;

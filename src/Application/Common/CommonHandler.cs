@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using Infrastructure.Persistence;
+using Microsoft.Extensions.Logging;
 using Shared.Common;
 
 namespace Application.Common;
@@ -91,6 +92,7 @@ public class CommonHandler
 public class CommonHandler<T> : CommonHandler
 {
     public T _repository;
+
     public CommonHandler(AppDbContext dbContext, T repository) : base(dbContext)
     {
         this._repository = repository;

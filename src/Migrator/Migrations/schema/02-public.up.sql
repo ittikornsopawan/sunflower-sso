@@ -5,17 +5,21 @@ CREATE SCHEMA IF NOT EXISTS public;
 CREATE TABLE IF NOT EXISTS m_parameters (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID,
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID,
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID,
-    effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (expires_at IS NULL OR expires_at > effective_at),
+
+    effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NULL OR expires_at > effective_at),
+    
     category VARCHAR(32),
     key VARCHAR(32) NOT NULL,
     title VARCHAR(128),
@@ -46,15 +50,18 @@ COMMENT ON COLUMN m_parameters.value IS 'Parameter value';
 CREATE TABLE IF NOT EXISTS m_error_handlers (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
+
     status_code VARCHAR(8) NOT NULL,
     code VARCHAR(8) NOT NULL,
     message VARCHAR(128) NOT NULL,
@@ -82,17 +89,21 @@ COMMENT ON INDEX idx_m_error_handlers_code_language IS 'Index to optimize querie
 CREATE TABLE IF NOT EXISTS t_addresses (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+    
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
-    effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (expires_at IS NULL OR expires_at > effective_at),
+
+    effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NULL OR expires_at > effective_at),
+
     type VARCHAR(16) NOT NULL,
     address BYTEA NOT NULL,
     address_additional BYTEA,
@@ -142,15 +153,18 @@ COMMENT ON INDEX idx_t_addresses_geofence_area IS 'GIST index to optimize spatia
 CREATE TABLE IF NOT EXISTS t_contacts (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
+
     channel VARCHAR(16) NOT NULL CHECK (channel in ('MOBILE', 'EMAIL', 'FAX', 'SOCIAL_MEDIA')),
     contact VARCHAR(128) NOT NULL,
     contact_name VARCHAR(512) NOT NULL,
@@ -180,17 +194,21 @@ COMMENT ON INDEX idx_t_contacts_channel_contact IS 'Index to optimize queries fi
 CREATE TABLE IF NOT EXISTS t_files (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
-    effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (expires_at IS NULL OR expires_at > effective_at),
+
+    effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NULL OR expires_at > effective_at),
+
     usage_type VARCHAR(32) CHECK (usage_type IN ('DOCUMENT', 'IMAGE', 'VIDEO')),
     file_path VARCHAR(512),
     file_name VARCHAR(128),
@@ -236,15 +254,18 @@ COMMENT ON INDEX idx_t_files_file_name_file_extension IS 'Index to optimize quer
 CREATE TABLE IF NOT EXISTS t_personal_info (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
+
     sid BYTEA,
     prefix_name BYTEA,
     first_name BYTEA NOT NULL,
@@ -279,15 +300,18 @@ COMMENT ON INDEX uq_t_personal_info_first_name_middle_name_last_name IS 'Ensures
 CREATE TABLE IF NOT EXISTS t_personal_contacts (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
+
     personal_id UUID NOT NULL REFERENCES t_personal_info(id),
     contact_id UUID NOT NULL REFERENCES t_contacts(id)
 );
@@ -309,15 +333,18 @@ COMMENT ON COLUMN t_personal_contacts.contact_id IS 'Reference to the contact de
 CREATE TABLE IF NOT EXISTS t_personal_addresses (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
+
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
+
     personal_id UUID NOT NULL REFERENCES t_personal_info(id),
     address_id UUID NOT NULL REFERENCES t_addresses(id)
 );

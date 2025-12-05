@@ -11,16 +11,14 @@ public class UserDTO
     /// <summary>
     /// Gets or sets the unique identifier of the user.
     /// </summary>
-    [Required(ErrorMessage = "Id is required.")]
     [Display(Name = "User Id")]
-    public required Guid id { get; set; }
+    public Guid? id { get; set; }
 
     /// <summary>
     /// Gets or sets the user code (unique identifier for user registration flow).
     /// </summary>
-    [Required(ErrorMessage = "Code is required.")]
     [Display(Name = "Code")]
-    public required string code { get; set; }
+    public string? code { get; set; }
 
     /// <summary>
     /// Gets or sets the username of the user.

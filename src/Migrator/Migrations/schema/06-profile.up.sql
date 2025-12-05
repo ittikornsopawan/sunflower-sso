@@ -5,16 +5,16 @@ CREATE TABLE IF NOT EXISTS profile.m_user_profiles
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
 
     user_id UUID NOT NULL REFERENCES authentication.t_users(id),

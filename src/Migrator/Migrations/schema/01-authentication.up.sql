@@ -7,16 +7,16 @@ CREATE TABLE IF NOT EXISTS authentication.t_users
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID,
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
 
     code VARCHAR(32) NOT NULL,
@@ -47,20 +47,20 @@ CREATE TABLE IF NOT EXISTS authentication.t_user_authentications
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
 
-    effective_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
+    effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
 
     user_id UUID NOT NULL REFERENCES authentication.t_users(id),
     is_temporary BOOLEAN NOT NULL DEFAULT FALSE,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS authentication.t_user_referrer_mappings
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     user_id UUID NOT NULL REFERENCES authentication.t_users(id),
     referrer_id UUID NOT NULL REFERENCES authentication.t_users(id)
@@ -116,16 +116,16 @@ CREATE TABLE IF NOT EXISTS authentication.t_user_open_authentication
 (
     id UUID NOT NULL DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
     created_by UUID NOT NULL REFERENCES authentication.t_users(id),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
 
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
+    inactive_at TIMESTAMP WITHOUT TIME ZONE,
     inactive_by UUID REFERENCES authentication.t_users(id),
 
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
     deleted_by UUID REFERENCES authentication.t_users(id),
 
     provider VARCHAR(32) NOT NULL CHECK (provider IN ('GOOGLE', 'MICROSOFT', 'APPLE', 'FACEBOOK', 'LINE', 'GITHUB', 'OTHER')),
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS authentication.t_user_open_authentication
 
     access_token TEXT,
     refresh_token TEXT,
-    token_expires_at TIMESTAMP,
+    token_expires_at TIMESTAMP WITHOUT TIME ZONE,
 
     raw_response JSONB
 );
