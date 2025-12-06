@@ -13,6 +13,7 @@ public class AppSettings
     public TokenOptions Token { get; set; } = new();
     public PaginationOptions Pagination { get; set; } = new();
     public HealthCheck HealthCheck { get; set; } = new();
+    public KeyValue KeyValue { get; set; } = new();
 }
 
 public class ConnectionStrings
@@ -60,4 +61,9 @@ public class EmailSettings
     public string From { get; set; } = default!;
     public int RetryAttempt { get; set; } = 3;
     public int RetryDelay { get; set; } = 500;
+}
+
+public class KeyValue
+{
+    public string OTPEmailTemplate { get; set; } = default!;
 }

@@ -1,4 +1,5 @@
 using System;
+using Domain.Entities;
 using Domain.Interfaces.Repository;
 using Infrastructure.Common;
 using Infrastructure.Persistence;
@@ -11,7 +12,7 @@ public class ParameterCommandRepository : BaseRepository, IParameterCommandRepos
     {
     }
 
-    public async Task Create(string key, string value, string? title = null, string? description = null, string? category = null, string? language = null)
+    public async Task Create(ParameterEntity parameter)
     {
     }
 }

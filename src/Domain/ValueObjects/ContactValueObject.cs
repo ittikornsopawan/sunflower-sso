@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -98,5 +99,14 @@ public sealed record ContactValueObject
         // Assumes a mobile number with 9 to 15 digits
         var regex = new Regex(@"^\d{9,15}$");
         return regex.IsMatch(mobile);
+    }
+
+    public string Type()
+    {
+        if (IsValidEmail(this.value)) return "EMAIL";
+
+        if (IsValidMobile(this.value)) return "MOBILE";
+
+        return "UNDEFINED";
     }
 }

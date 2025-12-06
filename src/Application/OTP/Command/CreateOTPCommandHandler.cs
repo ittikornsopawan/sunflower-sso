@@ -1,7 +1,9 @@
 using System;
 using System.Net;
+using System.Text.Json;
 using Application.Common;
 using Domain.Entities;
+using Domain.Interfaces.Repository;
 using Domain.UseCases.Notification.Services;
 using Domain.UseCases.Otp.Services;
 using Domain.ValueObjects;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shared.Common;
 using Shared.Configurations;
+using Shared.Extensions;
 
 namespace Application.OTP.Command;
 
@@ -19,31 +22,73 @@ public class CreateOTPCommandHandler : CommonHandler, IRequestHandler<CreateOTPC
     protected AppSettings _appSettings;
     protected IOtpService _otpService;
     protected INotificationService _notificationService;
+    protected IParameterQueryRepository _parameterQueryRepository;
+    protected INotificationQueryRepository _notificationQueryRepository;
 
-    public CreateOTPCommandHandler(IOptions<AppSettings> appSettings, AppDbContext context, IOtpService otpService, INotificationService notificationService) : base(context)
+    public CreateOTPCommandHandler(
+        IOptions<AppSettings> appSettings,
+        AppDbContext context,
+        IOtpService otpService,
+        INotificationService notificationService,
+        IParameterQueryRepository parameterQueryRepository,
+        INotificationQueryRepository notificationQueryRepository) : base(context)
     {
         _appSettings = appSettings.Value;
         _otpService = otpService;
         _notificationService = notificationService;
+        _parameterQueryRepository = parameterQueryRepository;
+        _notificationQueryRepository = notificationQueryRepository;
     }
 
     public async Task<ResponseModel<OTPEntity>> Handle(CreateOTPCommand request, CancellationToken cancellationToken)
     {
-        try
+        using (var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken))
         {
-            var otpResult = await _otpService.GenerateOTP(request.purpose, request.contact);
-            return this.SuccessResponse<OTPEntity>(otpResult);
-        }
-        catch (ArgumentException ex)
-        {
-            Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
-            return this.FailResponse<OTPEntity>(HttpStatusCode.BadRequest, "20001");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
-            return this.FailResponse<OTPEntity>(HttpStatusCode.InternalServerError, "30001");
-        }
+            try
+            {
+                var otpResult = await _otpService.GenerateOTP(request.purpose, request.contact);
+                if (otpResult == null)
+                    throw new Exception("failed to generate otp.");
 
+                var parameters = await _parameterQueryRepository.GetParameters(key: this._appSettings.KeyValue.OTPEmailTemplate);
+                if (parameters == null || !parameters.Any())
+                    throw new Exception("parameter is not configured.");
+
+                var parameter = parameters.First();
+
+                var templates = await _notificationQueryRepository.GetNotificationTemplates(key: parameter.value);
+                if (templates == null || !templates.Any())
+                    throw new Exception("template is not configured.");
+
+                var template = templates.First();
+
+                var variables = VariableExtension.Parse(template.variables!);
+                if (variables == null || !variables.Any())
+                    throw new Exception("template content is invalid.");
+
+                variables["code"] = otpResult.code!.value;
+                variables["expiry"] = otpResult.expiry.ToString();
+                variables["refCode"] = otpResult.refCode!.value.ToString();
+
+                template.content = VariableExtension.Replace(template.content!, variables);
+
+                var isSent = await _notificationService.Send(request.contact, template.content!, template.subject!);
+
+                transaction.Commit();
+                return this.SuccessResponse<OTPEntity>(otpResult);
+            }
+            catch (ArgumentException ex)
+            {
+                transaction.Rollback();
+                Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
+                return this.FailResponse<OTPEntity>(HttpStatusCode.BadRequest, "20001");
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
+                return this.FailResponse<OTPEntity>(HttpStatusCode.InternalServerError, "30001");
+            }
+        }
     }
 }

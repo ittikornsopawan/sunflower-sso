@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
     //audit
@@ -760,6 +761,18 @@ public class AppDbContext : DbContext
             entity.Property(e => e.message).HasColumnName("message");
             entity.Property(e => e.status).HasColumnName("status");
             entity.Property(e => e.retryCount).HasColumnName("retry_count");
+
+            entity.Ignore(e => e.code);
+            entity.Ignore(e => e.updatedById);
+            entity.Ignore(e => e.updatedAt);
+
+            entity.Ignore(e => e.isDeleted);
+            entity.Ignore(e => e.deletedById);
+            entity.Ignore(e => e.deletedAt);
+
+            entity.Ignore(e => e.isActive);
+            entity.Ignore(e => e.inactiveById);
+            entity.Ignore(e => e.inactiveAt);
         });
 
         modelBuilder.Entity<t_notification_templates>(entity =>
@@ -786,6 +799,8 @@ public class AppDbContext : DbContext
             entity.Property(e => e.isHtml).HasColumnName("is_html");
             entity.Property(e => e.content).HasColumnName("content");
             entity.Property(e => e.variables).HasColumnName("variables");
+
+            entity.Ignore(e => e.code);
         });
 
         modelBuilder.Entity<m_consent_types>(entity =>
@@ -851,7 +866,6 @@ public class AppDbContext : DbContext
             entity.Property(e => e.deletedAt).HasColumnName("deleted_at");
             entity.Property(e => e.deletedById).HasColumnName("deleted_by");
             entity.Property(e => e.consentTypeId).HasColumnName("consent_type_id");
-            entity.Property(e => e.version).HasColumnName("version");
             entity.Property(e => e.userId).HasColumnName("user_id");
             entity.Property(e => e.consentTypeId).HasColumnName("consent_type_id");
             entity.Property(e => e.consentId).HasColumnName("consent_id");

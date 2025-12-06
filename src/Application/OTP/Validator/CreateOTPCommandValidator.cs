@@ -28,7 +28,7 @@ public class CreateOTPCommandValidator : AbstractValidator<CreateOTPCommand>
             "OTHER"
         };
 
-        return validPurposes.Contains(purpose?.Trim().ToLower());
+        return validPurposes.Contains(purpose?.Trim().ToUpper());
     }
 
     private bool BeValidEmailOrPhone(string contact)

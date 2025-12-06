@@ -1,15 +1,11 @@
 using System;
 using System.Net;
 using System.Net.Mail;
+using Domain.Interfaces.Gateway;
 using Microsoft.Extensions.Options;
 using Shared.Configurations;
 
 namespace Infrastructure.Gateway;
-
-public interface IEmailGateway
-{
-    void Send(string to, string subject, string body);
-}
 
 /// <summary>
 /// Infrastructure Email Gateway for sending emails via SMTP.
@@ -33,9 +29,9 @@ public class EmailGateway : IEmailGateway
     /// <param name="body">Email body (HTML supported).</param>
     /// <exception cref="SmtpException">Thrown if sending fails after all retry attempts.</exception>
     /// <author>Ittikorn Sopawan</author>
-    public void Send(string to, string subject, string body)
+    public async Task Send(string to, string subject, string body)
     {
-        int maxRetries = this._appSettings.EmailSettings.RetryAttempt;
+        int maxRetries = _appSettings.EmailSettings.RetryAttempt;
         int attempt = 0;
         Exception? lastException = null;
 
@@ -45,11 +41,13 @@ public class EmailGateway : IEmailGateway
             {
                 using var client = new SmtpClient(_appSettings.EmailSettings.Host, _appSettings.EmailSettings.Port)
                 {
-                    Credentials = new NetworkCredential(_appSettings.EmailSettings.Username, _appSettings.EmailSettings.Password),
+                    Credentials = new NetworkCredential(
+                        _appSettings.EmailSettings.Username,
+                        _appSettings.EmailSettings.Password),
                     EnableSsl = _appSettings.EmailSettings.EnableSsl
                 };
 
-                var mail = new MailMessage()
+                using var mail = new MailMessage()
                 {
                     From = new MailAddress(_appSettings.EmailSettings.From),
                     Subject = subject,
@@ -59,7 +57,7 @@ public class EmailGateway : IEmailGateway
 
                 mail.To.Add(to);
 
-                client.Send(mail);
+                await client.SendMailAsync(mail);
                 return;
             }
             catch (Exception ex)
@@ -67,9 +65,12 @@ public class EmailGateway : IEmailGateway
                 lastException = ex;
                 attempt++;
 
-                Thread.Sleep(this._appSettings.EmailSettings.RetryDelay);
+                if (attempt >= maxRetries)
+                    throw new SmtpException(
+                        $"Failed to send email after {maxRetries} attempts.",
+                        lastException);
 
-                if (attempt >= maxRetries) throw new SmtpException($"Failed to send email after {maxRetries} attempts.", lastException);
+                await Task.Delay(_appSettings.EmailSettings.RetryDelay);
             }
         }
     }

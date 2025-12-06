@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces/Gateway/" />
     <Folder Include="UseCases/Notification/Events/" />
     <Folder Include="UseCases/Otp/Events/" />
+    <Folder Include="UseCases/Parameter/Events/" />
   </ItemGroup>
 
   <ItemGroup>

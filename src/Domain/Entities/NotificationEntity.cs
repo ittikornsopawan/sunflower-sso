@@ -21,6 +21,11 @@ public class NotificationEntity : BaseEntity
     public ContactValueObject contact { get; private set; }
 
     /// <summary>
+    /// The notification title (optional).
+    /// </summary>
+    public TitleValueObject? subject { get; private set; }
+
+    /// <summary>
     /// The notification message content, stored as byte[].
     /// </summary>
     public MessageValueObject message { get; private set; }
@@ -50,13 +55,16 @@ public class NotificationEntity : BaseEntity
         TypeValueObject type,
         MessageValueObject message,
         StatusValueObject? status = null,
-        RetryCountValueObject? retryCount = null)
+        RetryCountValueObject? retryCount = null,
+        TitleValueObject? subject = null,
+        Guid? id = null)
     {
-        this.id = Guid.NewGuid();
+        this.id = id ?? Guid.NewGuid();
         this.contact = contact ?? throw new ArgumentNullException(nameof(contact));
         this.type = type ?? throw new ArgumentNullException(nameof(type));
         this.message = message ?? throw new ArgumentNullException(nameof(message));
         this.status = status ?? new StatusValueObject("PENDING");
         this.retryCount = retryCount ?? new RetryCountValueObject(0);
+        this.subject = subject;
     }
 }

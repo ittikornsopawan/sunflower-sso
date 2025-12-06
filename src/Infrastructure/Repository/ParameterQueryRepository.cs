@@ -17,9 +17,11 @@ public class ParameterQueryRepository : BaseRepository, IParameterQueryRepositor
     {
         var query = this._dbContext.m_parameters.AsQueryable();
 
-        if (!string.IsNullOrEmpty(key)) query = query.Where(p => p.key == key);
+        if (!string.IsNullOrEmpty(key))
+            query = query.Where(p => p.key == key);
 
-        if (!string.IsNullOrEmpty(category)) query = query.Where(p => p.category == category);
+        if (!string.IsNullOrEmpty(category))
+            query = query.Where(p => p.category == category);
 
         var result = await query.ToListAsync();
         if (result == null) return null;
