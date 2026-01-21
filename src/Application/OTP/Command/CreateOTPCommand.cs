@@ -3,13 +3,13 @@ using Domain.Entities;
 using MediatR;
 using Shared.Common;
 
-namespace Application.OTP.Command;
+namespace Application.Otp.Command;
 
-public class CreateOTPCommand : IRequest<ResponseModel<OTPEntity>>
+public class CreateOtpCommand : IRequest<ResponseModel<OtpEntity>>
 {
     public string purpose { get; }
     public string contact { get; }
-    public CreateOTPCommand(string purpose, string contact)
+    public CreateOtpCommand(string purpose, string contact)
     {
         this.purpose = purpose;
         this.contact = contact;

@@ -15,9 +15,9 @@ using Shared.Common;
 using Shared.Configurations;
 using Shared.Extensions;
 
-namespace Application.OTP.Command;
+namespace Application.Otp.Command;
 
-public class CreateOTPCommandHandler : CommonHandler, IRequestHandler<CreateOTPCommand, ResponseModel<OTPEntity>>
+public class CreateOtpCommandHandler : CommonHandler, IRequestHandler<CreateOtpCommand, ResponseModel<OtpEntity>>
 {
     protected AppSettings _appSettings;
     protected IOtpService _otpService;
@@ -25,7 +25,7 @@ public class CreateOTPCommandHandler : CommonHandler, IRequestHandler<CreateOTPC
     protected IParameterQueryRepository _parameterQueryRepository;
     protected INotificationQueryRepository _notificationQueryRepository;
 
-    public CreateOTPCommandHandler(
+    public CreateOtpCommandHandler(
         IOptions<AppSettings> appSettings,
         AppDbContext context,
         IOtpService otpService,
@@ -40,7 +40,7 @@ public class CreateOTPCommandHandler : CommonHandler, IRequestHandler<CreateOTPC
         _notificationQueryRepository = notificationQueryRepository;
     }
 
-    public async Task<ResponseModel<OTPEntity>> Handle(CreateOTPCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseModel<OtpEntity>> Handle(CreateOtpCommand request, CancellationToken cancellationToken)
     {
         using (var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken))
         {
@@ -75,19 +75,19 @@ public class CreateOTPCommandHandler : CommonHandler, IRequestHandler<CreateOTPC
                 var isSent = await _notificationService.Send(request.contact, template.content!, template.subject!);
 
                 transaction.Commit();
-                return this.SuccessResponse<OTPEntity>(otpResult);
+                return this.SuccessResponse<OtpEntity>(otpResult);
             }
             catch (ArgumentException ex)
             {
                 transaction.Rollback();
                 Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
-                return this.FailResponse<OTPEntity>(HttpStatusCode.BadRequest, "20001");
+                return this.FailResponse<OtpEntity>(HttpStatusCode.BadRequest, "20001");
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
                 Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
-                return this.FailResponse<OTPEntity>(HttpStatusCode.InternalServerError, "30001");
+                return this.FailResponse<OtpEntity>(HttpStatusCode.InternalServerError, "30001");
             }
         }
     }

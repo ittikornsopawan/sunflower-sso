@@ -56,9 +56,15 @@ public class NotificationService : INotificationService
 
             return false;
         }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine("", ex);
+            return false;
+        }
         catch (Exception ex)
         {
-            throw;
+            Console.WriteLine("", ex);
+            return false;
         }
     }
 }

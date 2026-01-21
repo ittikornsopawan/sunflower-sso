@@ -7,7 +7,7 @@ namespace Domain.ValueObjects;
 /// Value Object representing an 8-character alphanumeric OTP reference code.
 /// </summary>
 /// <author>Ittikorn Sopawan</author>
-public sealed record OTPRefCodeValueObject
+public sealed record OtpRefCodeValueObject
 {
     /// <summary>
     /// The reference code value (8-character alphanumeric string).
@@ -20,7 +20,7 @@ public sealed record OTPRefCodeValueObject
     /// <summary>
     /// Constructor that generates a random 8-character alphanumeric reference code.
     /// </summary>
-    public OTPRefCodeValueObject()
+    public OtpRefCodeValueObject()
     {
         this.value = GenerateRandom();
     }
@@ -30,7 +30,7 @@ public sealed record OTPRefCodeValueObject
     /// </summary>
     /// <param name="value">Reference code value</param>
     /// <exception cref="ArgumentException">Thrown if the value is not exactly 8 alphanumeric characters.</exception>
-    public OTPRefCodeValueObject(string value)
+    public OtpRefCodeValueObject(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Reference code cannot be empty.", nameof(value));

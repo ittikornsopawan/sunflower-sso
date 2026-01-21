@@ -7,7 +7,7 @@ namespace Domain.UseCases.Otp.Services;
 
 public interface IOtpService
 {
-    Task<OTPEntity> GenerateOTP(string purpose, string contact);
+    Task<OtpEntity> GenerateOTP(string purpose, string contact);
 }
 
 public class OtpService : IOtpService
@@ -20,7 +20,7 @@ public class OtpService : IOtpService
         _otpCommandRepository = otpCommandRepository;
     }
 
-    public async Task<OTPEntity> GenerateOTP(string purpose, string contact)
+    public async Task<OtpEntity> GenerateOTP(string purpose, string contact)
     {
         if (string.IsNullOrWhiteSpace(purpose))
             throw new ArgumentException("Purpose cannot be empty.", nameof(purpose));
@@ -36,7 +36,7 @@ public class OtpService : IOtpService
 
         (codeOV, refCodeOV) = await DuplicateOtpCheck(codeOV, refCodeOV);
 
-        var otpEntity = new OTPEntity(
+        var otpEntity = new OtpEntity(
             contact: contactOV,
             purpose: purposeOV,
             code: codeOV,
@@ -61,5 +61,21 @@ public class OtpService : IOtpService
         var newRefCode = new OTPRefCodeValueObject();
 
         return await DuplicateOtpCheck(newCode, newRefCode);
+    }
+
+    public async Task Verify(string code, string refCode, Guid? id = null)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+            throw new ArgumentException("code cannot be empty.", nameof(code));
+
+        if (string.IsNullOrWhiteSpace(refCode))
+            throw new ArgumentException("refCode cannot be empty.", nameof(refCode));
+
+        var codeOV = new OTPCodeValueObject(code);
+        var refCodeOV = new OTPRefCodeValueObject(refCode);
+
+        var otpEntity = new OtpEntity(code: codeOV, refCode: refCodeOV);
+
+        // var insertedId = await this._otpCommandRepository.InsertOtp(otpEntity);
     }
 }

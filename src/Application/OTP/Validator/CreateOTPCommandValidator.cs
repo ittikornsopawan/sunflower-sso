@@ -1,10 +1,10 @@
 using System;
-using Application.OTP.Command;
+using Application.Otp.Command;
 using FluentValidation;
 
-namespace Application.OTP.Validator;
+namespace Application.Otp.Validator;
 
-public class CreateOTPCommandValidator : AbstractValidator<CreateOTPCommand>
+public class CreateOTPCommandValidator : AbstractValidator<CreateOtpCommand>
 {
     public CreateOTPCommandValidator()
     {

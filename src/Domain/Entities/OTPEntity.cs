@@ -8,7 +8,7 @@ namespace Domain.Entities;
 /// Entity representing a One-Time Password (OTP).
 /// </summary>
 /// <author>Ittikorn Sopawan</author>
-public class OTPEntity : BaseEntity
+public class OtpEntity : BaseEntity
 {
     /// <summary>
     /// The contact (Email or Mobile) associated with this OTP.
@@ -23,12 +23,12 @@ public class OTPEntity : BaseEntity
     /// <summary>
     /// The Referebce OTP code generated.
     /// </summary>
-    public OTPRefCodeValueObject? refCode { get; private set; }
+    public OtpRefCodeValueObject? refCode { get; private set; }
 
     /// <summary>
     /// The OTP code generated.
     /// </summary>
-    public OTPCodeValueObject? code { get; private set; }
+    public OtpCodeValueObject? code { get; private set; }
 
     /// <summary>
     /// Expiration time of the OTP.
@@ -54,7 +54,7 @@ public class OTPEntity : BaseEntity
     /// <param name="code">Generated OTP code</param>
     /// <param name="expiry">Expiration time of the OTP</param>
     /// <author>Ittikorn Sopawan</author>
-    public OTPEntity(ContactValueObject contact, OTPPurposeValueObject purpose, OTPCodeValueObject code, OTPRefCodeValueObject refCode, DateTime? expiry = null, OTPAttemptValueObject? attempts = null)
+    public OtpEntity(ContactValueObject contact, OTPPurposeValueObject purpose, OtpCodeValueObject code, OtpRefCodeValueObject refCode, DateTime? expiry = null, OTPAttemptValueObject? attempts = null)
     {
         this.id = Guid.NewGuid();
         this.contact = contact ?? throw new ArgumentNullException(nameof(contact));
@@ -72,7 +72,7 @@ public class OTPEntity : BaseEntity
     /// <param name="contact">The contact value object (email or mobile).</param>
     /// <param name="purpose">The purpose value object.</param>
     /// <exception cref="ArgumentNullException">Thrown if contact or purpose is null.</exception>
-    public OTPEntity(ContactValueObject contact, OTPPurposeValueObject purpose, OTPAttemptValueObject? attempts = null)
+    public OtpEntity(ContactValueObject contact, OTPPurposeValueObject purpose, OTPAttemptValueObject? attempts = null)
     {
         this.id = Guid.NewGuid();
         this.contact = contact ?? throw new ArgumentNullException(nameof(contact));
@@ -86,7 +86,7 @@ public class OTPEntity : BaseEntity
     /// <param name="code">The OTP code.</param>
     /// <param name="refCode">The reference OTP code.</param>
     /// <param name="expiryMinutes">Minutes until expiration.</param>
-    public void SetOTP(OTPCodeValueObject code, OTPRefCodeValueObject refCode, int expiryMinutes = 5)
+    public void SetOTP(OtpCodeValueObject code, OtpRefCodeValueObject refCode, int expiryMinutes = 5)
     {
         if (code == null) throw new ArgumentException("OTP code cannot be empty.", nameof(code));
 
@@ -108,7 +108,7 @@ public class OTPEntity : BaseEntity
     /// </summary>
     /// <param name="inputCode">The OTP code provided by the user.</param>
     /// <returns>True if the code matches and is still valid; otherwise, false.</returns>
-    public bool VerifyOTP(OTPCodeValueObject code)
+    public bool VerifyOTP(OtpCodeValueObject code)
     {
 
         if (this.code == null) return false; // no OTP code set

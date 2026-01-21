@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using MediatR;
 
 using Presentation.Models;
-using Application.OTP.Command;
+using Application.Otp.Command;
 using Shared.Configurations;
 using System.Net;
 
@@ -23,7 +23,7 @@ namespace Presentation.Controllers
         [HttpPost("v1/create")]
         public async Task<IActionResult> CreateOTP([FromBody] OtpRequestModel request)
         {
-            var command = new CreateOTPCommand(request.purpose, request.contact);
+            var command = new CreateOtpCommand(request.purpose, request.contact);
             var result = await _mediator.Send(command);
 
             if (result.status.statusCode != HttpStatusCode.OK)
@@ -31,7 +31,6 @@ namespace Presentation.Controllers
 
             var response = new OtpResponseModel
             {
-                id = result.data.id,
                 refCode = result.data.refCode!.value,
                 expiresAt = result.data.expiry
             };
@@ -40,9 +39,20 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("v1/verify")]
-        public IActionResult VerifyOTP([FromBody] OtpVerifyModel request)
+        public async Task<IActionResult> VerifyOTP([FromBody] OtpVerifyRequestModel request)
         {
-            return Ok();
+            var command = new VerifyOTPCommand(request.code, request.refCode);
+            var result = await _mediator.Send(command);
+
+            if (result.status.statusCode != HttpStatusCode.OK)
+                return this.ResponseHandler(result.status.statusCode, result.status.bizErrorCode);
+
+            var response = new OtpVerifyResponseModel
+            {
+                id = Guid.NewGuid()
+            };
+
+            return this.ResponseHandler<OtpVerifyResponseModel>(response);
         }
     }
 }

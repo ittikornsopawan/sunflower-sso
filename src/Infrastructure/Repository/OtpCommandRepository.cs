@@ -15,7 +15,7 @@ public class OtpCommandRepository : BaseRepository, IOtpCommandRepository
     {
     }
 
-    public async Task<Guid> InsertOtp(OTPEntity otpEntity)
+    public async Task<Guid> InsertOtp(OtpEntity otpEntity)
     {
         try
         {

@@ -6,7 +6,7 @@ namespace Domain.ValueObjects;
 /// Value Object representing a 6-digit numeric OTP code.
 /// </summary>
 /// <author>Ittikorn Sopawan</author>
-public sealed record OTPCodeValueObject
+public sealed record OtpCodeValueObject
 {
     /// <summary>
     /// The OTP code value (6-digit numeric string).
@@ -19,7 +19,7 @@ public sealed record OTPCodeValueObject
     /// <param name="value">OTP code value</param>
     /// <exception cref="ArgumentException">Thrown if the value is not a 6-digit numeric string.</exception>
     /// <returns>An instance of <see cref="OTPCodeValueObject"/>.</returns>
-    public OTPCodeValueObject(string value)
+    public OtpCodeValueObject(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("OTP code cannot be empty.", nameof(value));
@@ -33,7 +33,7 @@ public sealed record OTPCodeValueObject
     /// <summary>
     /// Constructor that generates a random 6-digit OTP code.
     /// </summary>
-    public OTPCodeValueObject()
+    public OtpCodeValueObject()
     {
         this.value = GenerateRandom();
     }

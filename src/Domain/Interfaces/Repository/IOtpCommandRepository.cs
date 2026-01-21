@@ -6,5 +6,5 @@ namespace Domain.Interfaces.Repository;
 
 public interface IOtpCommandRepository
 {
-    Task<Guid> InsertOtp(OTPEntity otpEntity);
+    Task<Guid> InsertOtp(OtpEntity otpEntity);
 }

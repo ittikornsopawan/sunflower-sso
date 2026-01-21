@@ -19,8 +19,8 @@
     <Folder Include="Authentication/Mapping/" />
     <Folder Include="Authentication/Query/" />
     <Folder Include="Authentication/Validator/" />
-    <Folder Include="OTP/Mapping/" />
-    <Folder Include="OTP/Query/" />
+    <Folder Include="Otp/Mapping/" />
+    <Folder Include="Otp/Query/" />
     <Folder Include="Parameter/Command/" />
     <Folder Include="Parameter/Mapping/" />
     <Folder Include="Parameter/Query/" />

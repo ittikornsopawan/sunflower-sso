@@ -2,8 +2,9 @@ using System;
 
 namespace Presentation.Models;
 
-public class OtpResponseModel
+public class OtpVerifyRequestModel
 {
     public required string refCode { get; set; }
-    public required DateTime expiresAt { get; set; }
+    public required string code { get; set; }
+
 }
