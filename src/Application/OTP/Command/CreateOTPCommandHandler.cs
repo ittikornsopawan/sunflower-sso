@@ -40,6 +40,12 @@ public class CreateOtpCommandHandler : CommonHandler, IRequestHandler<CreateOtpC
         _notificationQueryRepository = notificationQueryRepository;
     }
 
+    /// <summary>
+    /// Handles the creation of an OTP by generating it, retrieving the appropriate notification template, replacing variables in the template with OTP details, and sending the notification to the user. The entire process is wrapped in a database transaction to ensure atomicity. If any step fails, the transaction is rolled back and an appropriate error response is returned. If successful, it returns a response containing the generated OtpEntity.
+    /// </summary>
+    /// <param name="request">Command Request containing purpose and contact information</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
+    /// <returns></returns>
     public async Task<ResponseModel<OtpEntity>> Handle(CreateOtpCommand request, CancellationToken cancellationToken)
     {
         using (var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken))

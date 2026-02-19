@@ -9,13 +9,7 @@ CREATE TABLE IF NOT EXISTS m_parameters (
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID,
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID,
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NULL OR expires_at > effective_at),
@@ -34,12 +28,7 @@ COMMENT ON COLUMN m_parameters.created_by IS 'User who created the record';
 COMMENT ON COLUMN m_parameters.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN m_parameters.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN m_parameters.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN m_parameters.is_active IS 'Indicates if the parameter is active';
-COMMENT ON COLUMN m_parameters.inactive_at IS 'Timestamp when parameter became inactive';
-COMMENT ON COLUMN m_parameters.inactive_by IS 'User who set inactive';
-COMMENT ON COLUMN m_parameters.is_deleted IS 'Indicates if the parameter is deleted';
-COMMENT ON COLUMN m_parameters.deleted_at IS 'Timestamp when parameter was deleted';
-COMMENT ON COLUMN m_parameters.deleted_by IS 'User who deleted the record';
+COMMENT ON COLUMN m_parameters.row_status IS 'Status of the parameter (ACTIVE, INACTIVE, DELETED)';
 COMMENT ON COLUMN m_parameters.effective_at IS 'Effective start timestamp';
 COMMENT ON COLUMN m_parameters.expires_at IS 'Expiration timestamp';
 COMMENT ON COLUMN m_parameters.category IS 'Category of the parameter';
@@ -54,13 +43,7 @@ CREATE TABLE IF NOT EXISTS m_error_handlers (
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     status_code VARCHAR(8) NOT NULL,
     code VARCHAR(8) NOT NULL,
@@ -73,12 +56,7 @@ COMMENT ON COLUMN m_error_handlers.created_by IS 'User who created the record';
 COMMENT ON COLUMN m_error_handlers.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN m_error_handlers.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN m_error_handlers.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN m_error_handlers.is_active IS 'Indicates if the parameter is active';
-COMMENT ON COLUMN m_error_handlers.inactive_at IS 'Timestamp when parameter became inactive';
-COMMENT ON COLUMN m_error_handlers.inactive_by IS 'User who set inactive';
-COMMENT ON COLUMN m_error_handlers.is_deleted IS 'Indicates if the parameter is deleted';
-COMMENT ON COLUMN m_error_handlers.deleted_at IS 'Timestamp when parameter was deleted';
-COMMENT ON COLUMN m_error_handlers.deleted_by IS 'User who deleted the record';
+COMMENT ON COLUMN m_error_handlers.row_status IS 'Status of the error handler (ACTIVE, INACTIVE, DELETED)';
 COMMENT ON COLUMN m_error_handlers.status_code IS 'Http Status Code';
 COMMENT ON COLUMN m_error_handlers.code IS 'Business Error Code';
 COMMENT ON COLUMN m_error_handlers.message IS 'Business Error Message';
@@ -92,14 +70,8 @@ CREATE TABLE IF NOT EXISTS t_addresses (
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
-    
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
 
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NULL OR expires_at > effective_at),
@@ -124,12 +96,7 @@ COMMENT ON COLUMN t_addresses.created_by IS 'User who created the address';
 COMMENT ON COLUMN t_addresses.created_at IS 'Timestamp when the address was created';
 COMMENT ON COLUMN t_addresses.updated_by IS 'User who last updated the address';
 COMMENT ON COLUMN t_addresses.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN t_addresses.is_active IS 'Indicates if the address is active';
-COMMENT ON COLUMN t_addresses.inactive_at IS 'Timestamp when address became inactive';
-COMMENT ON COLUMN t_addresses.inactive_by IS 'User who set inactive';
-COMMENT ON COLUMN t_addresses.is_deleted IS 'Indicates if the address is deleted';
-COMMENT ON COLUMN t_addresses.deleted_at IS 'Timestamp when the address was deleted';
-COMMENT ON COLUMN t_addresses.deleted_by IS 'User who deleted the record';
+COMMENT ON COLUMN t_addresses.row_status IS 'Status of the address (ACTIVE, INACTIVE, DELETED)';
 COMMENT ON COLUMN t_addresses.effective_at IS 'Effective start timestamp';
 COMMENT ON COLUMN t_addresses.expires_at IS 'Expiration timestamp';
 COMMENT ON COLUMN t_addresses.type IS 'Type of address';
@@ -157,13 +124,7 @@ CREATE TABLE IF NOT EXISTS t_contacts (
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     channel VARCHAR(16) NOT NULL CHECK (channel in ('MOBILE', 'EMAIL', 'FAX', 'SOCIAL_MEDIA')),
     contact VARCHAR(128) NOT NULL,
@@ -177,12 +138,7 @@ COMMENT ON COLUMN t_contacts.created_by IS 'User who created the contact';
 COMMENT ON COLUMN t_contacts.created_at IS 'Timestamp when contact was created';
 COMMENT ON COLUMN t_contacts.updated_by IS 'User who last updated the contact';
 COMMENT ON COLUMN t_contacts.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN t_contacts.is_active IS 'Indicates if the contact is active';
-COMMENT ON COLUMN t_contacts.inactive_at IS 'Timestamp when contact became inactive';
-COMMENT ON COLUMN t_contacts.inactive_by IS 'User who set inactive';
-COMMENT ON COLUMN t_contacts.is_deleted IS 'Indicates if the contact is deleted';
-COMMENT ON COLUMN t_contacts.deleted_at IS 'Timestamp when contact was deleted';
-COMMENT ON COLUMN t_contacts.deleted_by IS 'User who deleted the record';
+COMMENT ON COLUMN t_contacts.row_status IS 'Status of the contact (ACTIVE, INACTIVE, DELETED)';
 COMMENT ON COLUMN t_contacts.channel IS 'Contact channel: MOBILE, EMAIL, FAX, SOCIAL_MEDIA';
 COMMENT ON COLUMN t_contacts.contact IS 'Contact value';
 COMMENT ON COLUMN t_contacts.contact_name IS 'Name associated with contact';
@@ -198,13 +154,7 @@ CREATE TABLE IF NOT EXISTS t_files (
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NULL OR expires_at > effective_at),
@@ -228,12 +178,7 @@ COMMENT ON COLUMN t_files.created_by IS 'User who uploaded the file';
 COMMENT ON COLUMN t_files.created_at IS 'Timestamp when the file was created';
 COMMENT ON COLUMN t_files.updated_by IS 'User who last updated the file';
 COMMENT ON COLUMN t_files.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN t_files.is_active IS 'Indicates if the file is active';
-COMMENT ON COLUMN t_files.inactive_at IS 'Timestamp when the file became inactive';
-COMMENT ON COLUMN t_files.inactive_by IS 'User who set inactive';
-COMMENT ON COLUMN t_files.is_deleted IS 'Indicates if the file is deleted';
-COMMENT ON COLUMN t_files.deleted_at IS 'Timestamp when the file was deleted';
-COMMENT ON COLUMN t_files.deleted_by IS 'User who deleted the file';
+COMMENT ON COLUMN t_files.row_status IS 'Status of the file record (ACTIVE, INACTIVE, DELETED)';
 COMMENT ON COLUMN t_files.effective_at IS 'Effective start timestamp';
 COMMENT ON COLUMN t_files.expires_at IS 'Expiration timestamp';
 COMMENT ON COLUMN t_files.usage_type IS 'File usage type: DOCUMENT, IMAGE, VIDEO';
@@ -258,13 +203,7 @@ CREATE TABLE IF NOT EXISTS t_personal_info (
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     sid BYTEA,
     prefix_name BYTEA,
@@ -281,12 +220,8 @@ COMMENT ON COLUMN t_personal_info.created_by IS 'Reference to the user who creat
 COMMENT ON COLUMN t_personal_info.created_at IS 'Timestamp when the record was created.';
 COMMENT ON COLUMN t_personal_info.updated_by IS 'Reference to the user who last updated the record.';
 COMMENT ON COLUMN t_personal_info.updated_at IS 'Timestamp when the record was last updated.';
-COMMENT ON COLUMN t_personal_info.is_active IS 'Indicates whether the record is currently active.';
-COMMENT ON COLUMN t_personal_info.inactive_at IS 'Timestamp when the record was marked as inactive.';
-COMMENT ON COLUMN t_personal_info.inactive_by IS 'Reference to the user who marked the record inactive.';
-COMMENT ON COLUMN t_personal_info.is_deleted IS 'Indicates whether the record has been soft-deleted.';
-COMMENT ON COLUMN t_personal_info.deleted_at IS 'Timestamp when the record was marked as deleted.';
-COMMENT ON COLUMN t_personal_info.deleted_by IS 'Reference to the user who deleted the record.';
+COMMENT ON COLUMN t_personal_info.row_status IS 'Status of the personal information record (ACTIVE, INACTIVE, DELETED)';
+COMMENT ON COLUMN t_personal_info.sid IS 'Encrypted system identifier or unique code associated with the person.';
 COMMENT ON COLUMN t_personal_info.prefix_name IS 'Encrypted prefix or title of the person (e.g., Mr., Ms., Dr.).';
 COMMENT ON COLUMN t_personal_info.first_name IS 'Encrypted first name of the person.';
 COMMENT ON COLUMN t_personal_info.middle_name IS 'Encrypted middle name of the person, if applicable.';
@@ -304,13 +239,7 @@ CREATE TABLE IF NOT EXISTS t_personal_contacts (
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     personal_id UUID NOT NULL REFERENCES t_personal_info(id),
     contact_id UUID NOT NULL REFERENCES t_contacts(id)
@@ -321,12 +250,7 @@ COMMENT ON COLUMN t_personal_contacts.created_by IS 'Reference to the user who c
 COMMENT ON COLUMN t_personal_contacts.created_at IS 'Timestamp when the record was created.';
 COMMENT ON COLUMN t_personal_contacts.updated_by IS 'Reference to the user who last updated the record.';
 COMMENT ON COLUMN t_personal_contacts.updated_at IS 'Timestamp when the record was last updated.';
-COMMENT ON COLUMN t_personal_contacts.is_active IS 'Indicates whether the contact record is currently active.';
-COMMENT ON COLUMN t_personal_contacts.inactive_at IS 'Timestamp when the contact record was marked as inactive.';
-COMMENT ON COLUMN t_personal_contacts.inactive_by IS 'Reference to the user who marked the record as inactive.';
-COMMENT ON COLUMN t_personal_contacts.is_deleted IS 'Indicates whether the contact record has been soft-deleted.';
-COMMENT ON COLUMN t_personal_contacts.deleted_at IS 'Timestamp when the record was marked as deleted.';
-COMMENT ON COLUMN t_personal_contacts.deleted_by IS 'Reference to the user who deleted the record.';
+COMMENT ON COLUMN t_personal_contacts.row_status IS 'Status of the personal contact record (ACTIVE, INACTIVE, DELETED)';
 COMMENT ON COLUMN t_personal_contacts.personal_id IS 'Reference to the personal information record (t_personal_info.id).';
 COMMENT ON COLUMN t_personal_contacts.contact_id IS 'Reference to the contact detail record (t_contacts.id).';
 
@@ -337,13 +261,7 @@ CREATE TABLE IF NOT EXISTS t_personal_addresses (
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     personal_id UUID NOT NULL REFERENCES t_personal_info(id),
     address_id UUID NOT NULL REFERENCES t_addresses(id)
@@ -354,11 +272,6 @@ COMMENT ON COLUMN t_personal_addresses.created_by IS 'Reference to the user who 
 COMMENT ON COLUMN t_personal_addresses.created_at IS 'Timestamp when the record was created.';
 COMMENT ON COLUMN t_personal_addresses.updated_by IS 'Reference to the user who last updated the record.';
 COMMENT ON COLUMN t_personal_addresses.updated_at IS 'Timestamp when the record was last updated.';
-COMMENT ON COLUMN t_personal_addresses.is_active IS 'Indicates whether the address link is currently active.';
-COMMENT ON COLUMN t_personal_addresses.inactive_at IS 'Timestamp when the address link was marked as inactive.';
-COMMENT ON COLUMN t_personal_addresses.inactive_by IS 'Reference to the user who marked the address link as inactive.';
-COMMENT ON COLUMN t_personal_addresses.is_deleted IS 'Indicates whether the record has been soft-deleted.';
-COMMENT ON COLUMN t_personal_addresses.deleted_at IS 'Timestamp when the record was marked as deleted.';
-COMMENT ON COLUMN t_personal_addresses.deleted_by IS 'Reference to the user who deleted the record.';
+COMMENT ON COLUMN t_personal_addresses.row_status IS 'Status of the personal address link record (ACTIVE, INACTIVE, DELETED)';
 COMMENT ON COLUMN t_personal_addresses.personal_id IS 'Reference to the person record (t_personal_info.id).';
 COMMENT ON COLUMN t_personal_addresses.address_id IS 'Reference to the address record (t_addresses.id).';

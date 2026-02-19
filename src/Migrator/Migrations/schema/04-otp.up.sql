@@ -9,13 +9,7 @@ CREATE TABLE IF NOT EXISTS otp.t_otp
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     expires_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL '15 minutes',
 
@@ -31,12 +25,7 @@ COMMENT ON COLUMN otp.t_otp.created_by IS 'User who generated the Otp (reference
 COMMENT ON COLUMN otp.t_otp.created_at IS 'Timestamp when the Otp was created.';
 COMMENT ON COLUMN otp.t_otp.updated_by IS 'User who last updated the Otp record (references authentication.t_users.id).';
 COMMENT ON COLUMN otp.t_otp.updated_at IS 'Timestamp when the Otp was last updated.';
-COMMENT ON COLUMN otp.t_otp.is_active IS 'Indicates if the Otp is currently active.';
-COMMENT ON COLUMN otp.t_otp.inactive_at IS 'Timestamp when the Otp became inactive.';
-COMMENT ON COLUMN otp.t_otp.inactive_by IS 'User who marked the Otp inactive.';
-COMMENT ON COLUMN otp.t_otp.is_deleted IS 'Indicates if the Otp record is deleted.';
-COMMENT ON COLUMN otp.t_otp.deleted_at IS 'Timestamp when the Otp record was deleted.';
-COMMENT ON COLUMN otp.t_otp.deleted_by IS 'User who deleted the Otp record.';
+COMMENT ON COLUMN otp.t_otp.row_status IS 'Status of the Otp record (ACTIVE, INACTIVE, DELETED).';
 COMMENT ON COLUMN otp.t_otp.expires_at IS 'Expiration timestamp of the Otp.';
 COMMENT ON COLUMN otp.t_otp.purpose IS 'Purpose of the Otp: LOGIN, VERIFY, CONFIRM, RESET_PASSWORD, OTHER.';
 COMMENT ON COLUMN otp.t_otp.ref_code IS 'Reference code for which the Otp was generated.';

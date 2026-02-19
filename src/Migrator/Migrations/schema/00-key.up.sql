@@ -9,13 +9,7 @@ CREATE TABLE IF NOT EXISTS key.m_algorithms
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID,
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID,
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
@@ -30,12 +24,8 @@ COMMENT ON COLUMN key.m_algorithms.created_by IS 'User who created the algorithm
 COMMENT ON COLUMN key.m_algorithms.created_at IS 'Timestamp when the algorithm record was created';
 COMMENT ON COLUMN key.m_algorithms.updated_by IS 'User who last updated the algorithm record';
 COMMENT ON COLUMN key.m_algorithms.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN key.m_algorithms.is_active IS 'Indicates whether the algorithm is active';
-COMMENT ON COLUMN key.m_algorithms.inactive_at IS 'Timestamp when the algorithm became inactive';
-COMMENT ON COLUMN key.m_algorithms.inactive_by IS 'User who set the algorithm as inactive';
-COMMENT ON COLUMN key.m_algorithms.is_deleted IS 'Indicates whether the algorithm record is deleted';
-COMMENT ON COLUMN key.m_algorithms.deleted_at IS 'Timestamp when the algorithm record was deleted';
-COMMENT ON COLUMN key.m_algorithms.deleted_by IS 'User who deleted the algorithm record';
+COMMENT ON COLUMN key.m_algorithms.row_status IS 'Status of the record (ACTIVE, INACTIVE, DELETED, REVOKED)';
+;
 COMMENT ON COLUMN key.m_algorithms.effective_at IS 'Effective start timestamp of the algorithm';
 COMMENT ON COLUMN key.m_algorithms.expires_at IS 'Expiration timestamp of the algorithm';
 COMMENT ON COLUMN key.m_algorithms.name IS 'Name of the algorithm';
@@ -53,13 +43,7 @@ CREATE TABLE IF NOT EXISTS key.m_key_types
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID,
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID,
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
@@ -74,12 +58,8 @@ COMMENT ON COLUMN key.m_key_types.created_by IS 'User who created the key type r
 COMMENT ON COLUMN key.m_key_types.created_at IS 'Timestamp when the key type record was created';
 COMMENT ON COLUMN key.m_key_types.updated_by IS 'User who last updated the key type record';
 COMMENT ON COLUMN key.m_key_types.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN key.m_key_types.is_active IS 'Indicates whether the key type is active';
-COMMENT ON COLUMN key.m_key_types.inactive_at IS 'Timestamp when the key type became inactive';
-COMMENT ON COLUMN key.m_key_types.inactive_by IS 'User who set the key type as inactive';
-COMMENT ON COLUMN key.m_key_types.is_deleted IS 'Indicates whether the key type record is deleted';
-COMMENT ON COLUMN key.m_key_types.deleted_at IS 'Timestamp when the key type record was deleted';
-COMMENT ON COLUMN key.m_key_types.deleted_by IS 'User who deleted the key type record';
+COMMENT ON COLUMN key.m_key_types.row_status IS 'Status of the key type record (ACTIVE, INACTIVE, DELETED, REVOKED)';
+;
 COMMENT ON COLUMN key.m_key_types.effective_at IS 'Effective start timestamp of the key type';
 COMMENT ON COLUMN key.m_key_types.expires_at IS 'Expiration timestamp of the key type';
 COMMENT ON COLUMN key.m_key_types.name IS 'Name of the key type';
@@ -97,13 +77,7 @@ CREATE TABLE IF NOT EXISTS key.m_keys
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID,
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID,
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
@@ -117,12 +91,7 @@ COMMENT ON COLUMN key.m_keys.created_by IS 'Reference to the user who created th
 COMMENT ON COLUMN key.m_keys.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN key.m_keys.updated_by IS 'Reference to the user who last updated the record';
 COMMENT ON COLUMN key.m_keys.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN key.m_keys.is_active IS 'Indicates if the record is active';
-COMMENT ON COLUMN key.m_keys.inactive_at IS 'Timestamp when record became inactive';
-COMMENT ON COLUMN key.m_keys.inactive_by IS 'User who set inactive';
-COMMENT ON COLUMN key.m_keys.is_deleted IS 'Indicates if the record is deleted';
-COMMENT ON COLUMN key.m_keys.deleted_at IS 'Timestamp when record was deleted';
-COMMENT ON COLUMN key.m_keys.deleted_by IS 'User who deleted the record';
+COMMENT ON COLUMN key.m_keys.row_status IS 'Status of the record (ACTIVE, INACTIVE, DELETED, REVOKED)';
 COMMENT ON COLUMN key.m_keys.effective_at IS 'Effective start timestamp';
 COMMENT ON COLUMN key.m_keys.expires_at IS 'Expiration timestamp';
 COMMENT ON COLUMN key.m_keys.type_id IS 'Reference to key type (key.m_key_types.id)';

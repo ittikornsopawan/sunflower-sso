@@ -33,13 +33,7 @@ CREATE TABLE IF NOT EXISTS notification.t_notification_templates (
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     key VARCHAR(64) NOT NULL,
     version VARCHAR(8) NOT NULL DEFAULT '1.0.0',
@@ -55,12 +49,7 @@ COMMENT ON COLUMN notification.t_notification_templates.created_by IS 'User who 
 COMMENT ON COLUMN notification.t_notification_templates.created_at IS 'Timestamp when the template was created';
 COMMENT ON COLUMN notification.t_notification_templates.updated_by IS 'User who last updated the template';
 COMMENT ON COLUMN notification.t_notification_templates.updated_at IS 'Timestamp when the template was last updated';
-COMMENT ON COLUMN notification.t_notification_templates.is_active IS 'Indicates if the template is active';
-COMMENT ON COLUMN notification.t_notification_templates.inactive_at IS 'Timestamp when the template was deactivated';
-COMMENT ON COLUMN notification.t_notification_templates.inactive_by IS 'User who deactivated the template';
-COMMENT ON COLUMN notification.t_notification_templates.is_deleted IS 'Indicates if the template is deleted';
-COMMENT ON COLUMN notification.t_notification_templates.deleted_at IS 'Timestamp when the template was deleted';
-COMMENT ON COLUMN notification.t_notification_templates.deleted_by IS 'User who deleted the template';
+COMMENT ON COLUMN notification.t_notification_templates.row_status IS 'Status of the notification template record: ACTIVE, INACTIVE, DELETED, or REVOKED';
 COMMENT ON COLUMN notification.t_notification_templates.key IS 'Unique key identifier for the notification template';
 COMMENT ON COLUMN notification.t_notification_templates.version IS 'Version of the notification template';
 COMMENT ON COLUMN notification.t_notification_templates.name IS 'Unique name of the notification template';

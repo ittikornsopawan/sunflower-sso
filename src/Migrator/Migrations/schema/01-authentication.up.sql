@@ -11,13 +11,7 @@ CREATE TABLE IF NOT EXISTS authentication.t_users
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     code VARCHAR(32) NOT NULL,
     username VARCHAR(128) NOT NULL,
@@ -30,12 +24,7 @@ COMMENT ON COLUMN authentication.t_users.created_by IS 'User who created this us
 COMMENT ON COLUMN authentication.t_users.created_at IS 'Timestamp when the user record was created.';
 COMMENT ON COLUMN authentication.t_users.updated_by IS 'User who last updated this record (references authentication.t_users.id).';
 COMMENT ON COLUMN authentication.t_users.updated_at IS 'Timestamp when the user record was last updated.';
-COMMENT ON COLUMN authentication.t_users.is_active IS 'Indicates if the user account is active.';
-COMMENT ON COLUMN authentication.t_users.inactive_at IS 'Timestamp when the user was marked inactive.';
-COMMENT ON COLUMN authentication.t_users.inactive_by IS 'User who deactivated this account (references authentication.t_users.id).';
-COMMENT ON COLUMN authentication.t_users.is_deleted IS 'Indicates if the user account has been soft-deleted.';
-COMMENT ON COLUMN authentication.t_users.deleted_at IS 'Timestamp when the user was deleted.';
-COMMENT ON COLUMN authentication.t_users.deleted_by IS 'User who deleted this record (references authentication.t_users.id).';
+COMMENT ON COLUMN authentication.t_users.row_status IS 'Status of the user record (ACTIVE, INACTIVE, DELETED).';
 COMMENT ON COLUMN authentication.t_users.code IS 'Unique code assigned to the user.';
 COMMENT ON COLUMN authentication.t_users.username IS 'Unique username for login.';
 COMMENT ON COLUMN authentication.t_users.authentication_type IS 'Type of authentication: PASSWORD, OAUTH, EMAIL_Otp, MOBILE_Otp.';
@@ -51,13 +40,7 @@ CREATE TABLE IF NOT EXISTS authentication.t_user_authentications
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     effective_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITHOUT TIME ZONE CHECK (expires_at IS NOT NULL AND expires_at > effective_at),
@@ -76,10 +59,7 @@ COMMENT ON COLUMN authentication.t_user_authentications.created_by IS 'User who 
 COMMENT ON COLUMN authentication.t_user_authentications.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN authentication.t_user_authentications.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN authentication.t_user_authentications.updated_at IS 'Timestamp when the record was last updated';
-COMMENT ON COLUMN authentication.t_user_authentications.is_active IS 'Indicates if the record is active';
-COMMENT ON COLUMN authentication.t_user_authentications.inactive_at IS 'Timestamp when record became inactive';
-COMMENT ON COLUMN authentication.t_user_authentications.inactive_by IS 'User who marked inactive';
-COMMENT ON COLUMN authentication.t_user_authentications.is_deleted IS 'Indicates if the record has been deleted';
+COMMENT ON COLUMN authentication.t_user_authentications.row_status IS 'Status of the record (ACTIVE, INACTIVE, DELETED, REVOKED)';
 COMMENT ON COLUMN authentication.t_user_authentications.effective_at IS 'Effective start timestamp';
 COMMENT ON COLUMN authentication.t_user_authentications.expires_at IS 'Expiration timestamp (must be after effective_at)';
 COMMENT ON COLUMN authentication.t_user_authentications.user_id IS 'Reference to the user';
@@ -120,13 +100,7 @@ CREATE TABLE IF NOT EXISTS authentication.t_user_open_authentication
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     provider VARCHAR(32) NOT NULL CHECK (provider IN ('GOOGLE', 'MICROSOFT', 'APPLE', 'FACEBOOK', 'LINE', 'GITHUB', 'OTHER')),
     provider_name VARCHAR(64) CHECK (provider <> 'OTHER' or provider_name IS NOT NULL),
@@ -149,12 +123,7 @@ COMMENT ON COLUMN authentication.t_user_open_authentication.created_by IS 'User 
 COMMENT ON COLUMN authentication.t_user_open_authentication.created_at IS 'Timestamp when the record was created.';
 COMMENT ON COLUMN authentication.t_user_open_authentication.updated_by IS 'User who last updated the record (references authentication.t_users.id).';
 COMMENT ON COLUMN authentication.t_user_open_authentication.updated_at IS 'Timestamp when the record was last updated.';
-COMMENT ON COLUMN authentication.t_user_open_authentication.is_active IS 'Indicates whether the social login account is active.';
-COMMENT ON COLUMN authentication.t_user_open_authentication.inactive_at IS 'Timestamp when the social login account was deactivated.';
-COMMENT ON COLUMN authentication.t_user_open_authentication.inactive_by IS 'User who deactivated the account (references authentication.t_users.id).';
-COMMENT ON COLUMN authentication.t_user_open_authentication.is_deleted IS 'Indicates whether the record has been soft-deleted.';
-COMMENT ON COLUMN authentication.t_user_open_authentication.deleted_at IS 'Timestamp when the record was deleted.';
-COMMENT ON COLUMN authentication.t_user_open_authentication.deleted_by IS 'User who deleted the record (references authentication.t_users.id).';
+COMMENT ON COLUMN authentication.t_user_open_authentication.row_status IS 'Status of the record (ACTIVE, INACTIVE, DELETED).';
 COMMENT ON COLUMN authentication.t_user_open_authentication.provider IS 'Name of the external provider: GOOGLE, MICROSOFT, APPLE, FACEBOOK, LINE, GITHUB, OTHER.';
 COMMENT ON COLUMN authentication.t_user_open_authentication.provider_name IS 'Custom name for the provider when provider = OTHER.';
 COMMENT ON COLUMN authentication.t_user_open_authentication.provider_user_id IS 'User identifier provided by the external provider.';

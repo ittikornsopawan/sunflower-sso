@@ -29,8 +29,6 @@ public class OtpCommandRepository : BaseRepository, IOtpCommandRepository
                 attempts = otpEntity.attempts!.value,
                 result = otpEntity.result,
                 expiresAt = otpEntity.expiry ?? DateTime.UtcNow.AddMinutes(5),
-                isDeleted = false,
-                isActive = true,
                 createdById = Guid.Empty,
                 createdAt = DateTime.UtcNow
             };
@@ -60,8 +58,6 @@ public class OtpCommandRepository : BaseRepository, IOtpCommandRepository
             exist.attempts = otpEntity.attempts!.value;
             exist.result = otpEntity.result;
             exist.expiresAt = otpEntity.expiry ?? DateTime.UtcNow.AddMinutes(5);
-            exist.isDeleted = false;
-            exist.isActive = true;
             exist.updatedById = Guid.Empty;
             exist.updatedAt = DateTime.UtcNow;
 

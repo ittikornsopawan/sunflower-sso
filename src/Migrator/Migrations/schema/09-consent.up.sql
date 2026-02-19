@@ -8,13 +8,7 @@ CREATE TABLE IF NOT EXISTS consent.m_consent_types
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     name VARCHAR(128) NOT NULL,
     descruiption TEXT,
@@ -27,12 +21,7 @@ COMMENT ON COLUMN consent.m_consent_types.created_by IS 'User who created the re
 COMMENT ON COLUMN consent.m_consent_types.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN consent.m_consent_types.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN consent.m_consent_types.updated_at IS 'Timestamp when the record was last updated';
-COMMENT ON COLUMN consent.m_consent_types.is_active IS 'Indicates if the consent type is active';
-COMMENT ON COLUMN consent.m_consent_types.inactive_at IS 'Timestamp when the consent type was deactivated';
-COMMENT ON COLUMN consent.m_consent_types.inactive_by IS 'User who deactivated the consent type';
-COMMENT ON COLUMN consent.m_consent_types.is_deleted IS 'Indicates if the consent type is deleted';
-COMMENT ON COLUMN consent.m_consent_types.deleted_at IS 'Timestamp when the consent type was deleted';
-COMMENT ON COLUMN consent.m_consent_types.deleted_by IS 'User who deleted the consent type';
+COMMENT ON COLUMN consent.m_consent_types.row_status IS 'Status of the consent type record: ACTIVE, INACTIVE, DELETED, or REVOKED';
 COMMENT ON COLUMN consent.m_consent_types.name IS 'Name of the consent type';
 COMMENT ON COLUMN consent.m_consent_types.descruiption IS 'Description of the consent type';
 COMMENT ON COLUMN consent.m_consent_types.is_required IS 'Indicates if the consent type is mandatory for users';
@@ -49,13 +38,7 @@ CREATE TABLE IF NOT EXISTS consent.t_consents
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     consent_type_id UUID NOT NULL REFERENCES consent.m_consent_types(id),
     version VARCHAR(8) NOT NULL,
@@ -70,12 +53,7 @@ COMMENT ON COLUMN consent.t_consents.created_by IS 'User who created the record'
 COMMENT ON COLUMN consent.t_consents.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN consent.t_consents.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN consent.t_consents.updated_at IS 'Timestamp when the record was last updated';
-COMMENT ON COLUMN consent.t_consents.is_active IS 'Indicates if the consent version is active';
-COMMENT ON COLUMN consent.t_consents.inactive_at IS 'Timestamp when the consent version was deactivated';
-COMMENT ON COLUMN consent.t_consents.inactive_by IS 'User who deactivated the consent version';
-COMMENT ON COLUMN consent.t_consents.is_deleted IS 'Indicates if the consent version is deleted';
-COMMENT ON COLUMN consent.t_consents.deleted_at IS 'Timestamp when the consent version was deleted';
-COMMENT ON COLUMN consent.t_consents.deleted_by IS 'User who deleted the consent version';
+COMMENT ON COLUMN consent.t_consents.row_status IS 'Status of the consent version record: ACTIVE, INACTIVE, DELETED, or REVOKED';
 COMMENT ON COLUMN consent.t_consents.consent_type_id IS 'Foreign key referencing the consent type';
 COMMENT ON COLUMN consent.t_consents.version IS 'Version of the consent';
 COMMENT ON COLUMN consent.t_consents.name IS 'Name of the consent version';
@@ -94,13 +72,7 @@ CREATE TABLE IF NOT EXISTS consent.t_user_consents
     updated_by UUID,
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     user_id UUID NOT NULL REFERENCES authentication.t_users(id),
     consent_type_id UUID NOT NULL REFERENCES consent.m_consent_types(id),
@@ -114,12 +86,7 @@ COMMENT ON COLUMN consent.t_user_consents.created_by IS 'User who created the re
 COMMENT ON COLUMN consent.t_user_consents.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN consent.t_user_consents.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN consent.t_user_consents.updated_at IS 'Timestamp when the record was last updated';
-COMMENT ON COLUMN consent.t_user_consents.is_active IS 'Indicates if the user consent record is active';
-COMMENT ON COLUMN consent.t_user_consents.inactive_at IS 'Timestamp when the user consent record was deactivated';
-COMMENT ON COLUMN consent.t_user_consents.inactive_by IS 'User who deactivated the user consent record';
-COMMENT ON COLUMN consent.t_user_consents.is_deleted IS 'Indicates if the user consent record is deleted';
-COMMENT ON COLUMN consent.t_user_consents.deleted_at IS 'Timestamp when the user consent record was deleted';
-COMMENT ON COLUMN consent.t_user_consents.deleted_by IS 'User who deleted the user consent record';
+COMMENT ON COLUMN consent.t_user_consents.row_status IS 'Status of the user consent record: ACTIVE, INACTIVE, DELETED, or REVOKED';
 COMMENT ON COLUMN consent.t_user_consents.user_id IS 'Foreign key referencing the user';
 COMMENT ON COLUMN consent.t_user_consents.consent_type_id IS 'Foreign key referencing the consent type';
 COMMENT ON COLUMN consent.t_user_consents.consent_id IS 'Foreign key referencing the specific consent record';

@@ -8,13 +8,7 @@ CREATE TABLE IF NOT EXISTS author.m_attributes
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     is_parameter BOOLEAN NOT NULL DEFAULT FALSE,
     is_required BOOLEAN NOT NULL DEFAULT FALSE,
@@ -34,12 +28,7 @@ COMMENT ON COLUMN author.m_attributes.created_by IS 'User who created the attrib
 COMMENT ON COLUMN author.m_attributes.created_at IS 'Timestamp when the attribute was created';
 COMMENT ON COLUMN author.m_attributes.updated_by IS 'User who last updated the attribute';
 COMMENT ON COLUMN author.m_attributes.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN author.m_attributes.is_active IS 'Indicates whether the attribute is active';
-COMMENT ON COLUMN author.m_attributes.inactive_at IS 'Timestamp when the attribute became inactive';
-COMMENT ON COLUMN author.m_attributes.inactive_by IS 'User who set inactive';
-COMMENT ON COLUMN author.m_attributes.is_deleted IS 'Indicates if the attribute is deleted';
-COMMENT ON COLUMN author.m_attributes.deleted_at IS 'Timestamp when the attribute was deleted';
-COMMENT ON COLUMN author.m_attributes.deleted_by IS 'User who deleted the attribute';
+COMMENT ON COLUMN author.m_attributes.row_status IS 'Status of the attribute row: ACTIVE, INACTIVE, or DELETED';
 COMMENT ON COLUMN author.m_attributes.is_parameter IS 'Indicates if the attribute is a system parameter';
 COMMENT ON COLUMN author.m_attributes.is_required IS 'Indicates if the attribute is required';
 COMMENT ON COLUMN author.m_attributes.is_display IS 'Indicates if the attribute should be displayed in UI';
@@ -62,13 +51,7 @@ CREATE TABLE IF NOT EXISTS author.t_policies
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     name VARCHAR(128) NOT NULL,
     description TEXT,
@@ -85,12 +68,7 @@ COMMENT ON COLUMN author.t_policies.created_by IS 'User who created the policy';
 COMMENT ON COLUMN author.t_policies.created_at IS 'Timestamp when the policy was created';
 COMMENT ON COLUMN author.t_policies.updated_by IS 'User who last updated the policy';
 COMMENT ON COLUMN author.t_policies.updated_at IS 'Timestamp when the policy was last updated';
-COMMENT ON COLUMN author.t_policies.is_active IS 'Indicates whether the policy is active';
-COMMENT ON COLUMN author.t_policies.inactive_at IS 'Timestamp when the policy became inactive';
-COMMENT ON COLUMN author.t_policies.inactive_by IS 'User who marked the policy as inactive';
-COMMENT ON COLUMN author.t_policies.is_deleted IS 'Indicates whether the policy is deleted';
-COMMENT ON COLUMN author.t_policies.deleted_at IS 'Timestamp when the policy was deleted';
-COMMENT ON COLUMN author.t_policies.deleted_by IS 'User who deleted the policy';
+COMMENT ON COLUMN author.t_policies.row_status IS 'Status of the policy row: ACTIVE, INACTIVE, or DELETED';
 COMMENT ON COLUMN author.t_policies.name IS 'Name of the policy';
 COMMENT ON COLUMN author.t_policies.description IS 'Description of the policy';
 COMMENT ON COLUMN author.t_policies.code IS 'Unique code of the policy';
@@ -110,13 +88,7 @@ CREATE TABLE IF NOT EXISTS author.t_policy_attribute_mappings
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     policy_id UUID NOT NULL REFERENCES author.t_policies(id),
     attribute_id UUID NOT NULL REFERENCES author.m_attributes(id),
@@ -130,12 +102,7 @@ COMMENT ON COLUMN author.t_policy_attribute_mappings.created_by IS 'User who cre
 COMMENT ON COLUMN author.t_policy_attribute_mappings.created_at IS 'Timestamp when the mapping was created';
 COMMENT ON COLUMN author.t_policy_attribute_mappings.updated_by IS 'User who last updated the mapping';
 COMMENT ON COLUMN author.t_policy_attribute_mappings.updated_at IS 'Timestamp when the mapping was last updated';
-COMMENT ON COLUMN author.t_policy_attribute_mappings.is_active IS 'Indicates whether the mapping is active';
-COMMENT ON COLUMN author.t_policy_attribute_mappings.inactive_at IS 'Timestamp when the mapping became inactive';
-COMMENT ON COLUMN author.t_policy_attribute_mappings.inactive_by IS 'User who set the mapping as inactive';
-COMMENT ON COLUMN author.t_policy_attribute_mappings.is_deleted IS 'Indicates whether the mapping is deleted';
-COMMENT ON COLUMN author.t_policy_attribute_mappings.deleted_at IS 'Timestamp when the mapping was deleted';
-COMMENT ON COLUMN author.t_policy_attribute_mappings.deleted_by IS 'User who deleted the mapping';
+COMMENT ON COLUMN author.t_policy_attribute_mappings.row_status IS 'Status of the mapping row: ACTIVE, INACTIVE, or DELETED';
 COMMENT ON COLUMN author.t_policy_attribute_mappings.policy_id IS 'Reference to the policy (author.t_policies.id)';
 COMMENT ON COLUMN author.t_policy_attribute_mappings.attribute_id IS 'Reference to the attribute (author.m_attributes.id)';
 COMMENT ON COLUMN author.t_policy_attribute_mappings.operator IS 'Operator used for attribute evaluation';
@@ -186,13 +153,7 @@ CREATE TABLE IF NOT EXISTS author.t_user_attribute_mappings
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     user_id UUID NOT NULL REFERENCES authentication.t_users(id),
     attribute_id UUID NOT NULL REFERENCES author.m_attributes(id),
@@ -204,12 +165,7 @@ COMMENT ON COLUMN author.t_user_attribute_mappings.created_by IS 'User who creat
 COMMENT ON COLUMN author.t_user_attribute_mappings.created_at IS 'Timestamp when the mapping was created';
 COMMENT ON COLUMN author.t_user_attribute_mappings.updated_by IS 'User who last updated the mapping';
 COMMENT ON COLUMN author.t_user_attribute_mappings.updated_at IS 'Timestamp when the mapping was last updated';
-COMMENT ON COLUMN author.t_user_attribute_mappings.is_active IS 'Indicates whether the mapping is active';
-COMMENT ON COLUMN author.t_user_attribute_mappings.inactive_at IS 'Timestamp when mapping became inactive';
-COMMENT ON COLUMN author.t_user_attribute_mappings.inactive_by IS 'User who set the mapping as inactive';
-COMMENT ON COLUMN author.t_user_attribute_mappings.is_deleted IS 'Indicates whether the mapping is deleted';
-COMMENT ON COLUMN author.t_user_attribute_mappings.deleted_at IS 'Timestamp when the mapping was deleted';
-COMMENT ON COLUMN author.t_user_attribute_mappings.deleted_by IS 'User who deleted the mapping';
+COMMENT ON COLUMN author.t_user_attribute_mappings.row_status IS 'Status of the mapping row: ACTIVE, INACTIVE, or DELETED';
 COMMENT ON COLUMN author.t_user_attribute_mappings.user_id IS 'Reference to the user';
 COMMENT ON COLUMN author.t_user_attribute_mappings.attribute_id IS 'Reference to the attribute';
 COMMENT ON COLUMN author.t_user_attribute_mappings.value IS 'Value of the attribute for the user';

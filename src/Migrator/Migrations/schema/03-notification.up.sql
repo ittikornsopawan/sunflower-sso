@@ -9,13 +9,7 @@ CREATE TABLE IF NOT EXISTS notification.t_push_notifications
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     type VARCHAR(16) NOT NULL CHECK (type IN ('EMAIL', 'SMS', 'PUSH')),
     message TEXT NOT NULL,
@@ -30,12 +24,7 @@ COMMENT ON COLUMN notification.t_push_notifications.created_by IS 'User who crea
 COMMENT ON COLUMN notification.t_push_notifications.created_at IS 'Timestamp when the notification record was created.';
 COMMENT ON COLUMN notification.t_push_notifications.updated_by IS 'User who last updated the notification record (references authentication.t_users.id).';
 COMMENT ON COLUMN notification.t_push_notifications.updated_at IS 'Timestamp when the notification record was last updated.';
-COMMENT ON COLUMN notification.t_push_notifications.is_active IS 'Indicates if the notification record is active.';
-COMMENT ON COLUMN notification.t_push_notifications.inactive_at IS 'Timestamp when the notification record became inactive.';
-COMMENT ON COLUMN notification.t_push_notifications.inactive_by IS 'User who marked the notification as inactive.';
-COMMENT ON COLUMN notification.t_push_notifications.is_deleted IS 'Indicates if the notification record has been deleted.';
-COMMENT ON COLUMN notification.t_push_notifications.deleted_at IS 'Timestamp when the notification record was deleted.';
-COMMENT ON COLUMN notification.t_push_notifications.deleted_by IS 'User who deleted the notification record.';
+COMMENT ON COLUMN notification.t_push_notifications.row_status IS 'Status of the notification record (ACTIVE, INACTIVE, DELETED).';
 COMMENT ON COLUMN notification.t_push_notifications.type IS 'Type of notification: EMAIL, SMS, PUSH.';
 COMMENT ON COLUMN notification.t_push_notifications.message IS 'The content of the notification.';
 COMMENT ON COLUMN notification.t_push_notifications.user_id IS 'Reference to the user who will receive the notification (authentication.t_users.id).';

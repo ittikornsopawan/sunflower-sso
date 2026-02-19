@@ -5,9 +5,6 @@ namespace Infrastructure.Persistence.Entities;
 
 public class t_sessions : AuditableEntity
 {
-    public bool isRevoked { get; set; } = false;
-    public DateTime? revokedAt { get; set; } = default!;
-    public Guid? revokedBy { get; set; } = default!;
     public string revokedReason { get; set; } = default!;
     public DateTime expiresAt { get; set; }
     public Guid userId { get; set; }

@@ -17,8 +17,7 @@ public class OtpQueryRepository : BaseRepository, IOtpQueryRepository
     {
         var item = await this._dbContext.t_otp.Where(o =>
             o.id == id &&
-            o.isActive &&
-            !o.isDeleted &&
+            o.rowStatus == "ACTIVE" &&
             o.expiresAt > DateTime.UtcNow
         ).FirstOrDefaultAsync();
 
@@ -40,8 +39,7 @@ public class OtpQueryRepository : BaseRepository, IOtpQueryRepository
         var items = await this._dbContext.t_otp.Where(o =>
             o.otp == otpCode &&
             o.refCode == refCode &&
-            o.isActive &&
-            !o.isDeleted &&
+            o.rowStatus == "ACTIVE" &&
             o.expiresAt > DateTime.UtcNow
         ).Select(o => new OtpReferenceDTO
         {
@@ -58,8 +56,7 @@ public class OtpQueryRepository : BaseRepository, IOtpQueryRepository
         var item = await this._dbContext.t_otp
             .Where(o =>
                 o.refCode == refCode &&
-                o.isActive &&
-                !o.isDeleted &&
+                o.rowStatus == "ACTIVE" &&
                 o.expiresAt > DateTime.UtcNow
             )
             .Select(o => new OtpReferenceDTO

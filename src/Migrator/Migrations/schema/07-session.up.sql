@@ -9,13 +9,8 @@ CREATE TABLE IF NOT EXISTS session.t_sessions
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
-    is_revoked BOOLEAN NOT NULL DEFAULT FALSE,
-    revoked_at TIMESTAMP WITHOUT TIME ZONE,
-    revoked_by UUID REFERENCES authentication.t_users(id),
     revoked_reason TEXT,
 
     expires_at TIMESTAMP WITHOUT TIME ZONE,
@@ -35,12 +30,7 @@ COMMENT ON COLUMN session.t_sessions.created_by IS 'User who created the session
 COMMENT ON COLUMN session.t_sessions.created_at IS 'Timestamp when the session was created';
 COMMENT ON COLUMN session.t_sessions.updated_by IS 'User who last updated the session';
 COMMENT ON COLUMN session.t_sessions.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN session.t_sessions.is_active IS 'Indicates if the session is active';
-COMMENT ON COLUMN session.t_sessions.inactive_at IS 'Timestamp when the session became inactive';
-COMMENT ON COLUMN session.t_sessions.inactive_by IS 'User who marked the session inactive';
-COMMENT ON COLUMN session.t_sessions.is_revoked IS 'Indicates if the session has been revoked';
-COMMENT ON COLUMN session.t_sessions.revoked_at IS 'Timestamp when the session was revoked';
-COMMENT ON COLUMN session.t_sessions.revoked_by IS 'User who revoked the session';
+COMMENT ON COLUMN session.t_sessions.row_status IS 'Status of the session (ACTIVE, INACTIVE, DELETED, REVOKED)';
 COMMENT ON COLUMN session.t_sessions.revoked_reason IS 'Reason for revoking the session';
 COMMENT ON COLUMN session.t_sessions.expires_at IS 'Expiration timestamp of the session';
 COMMENT ON COLUMN session.t_sessions.user_id IS 'Reference to the user account';
@@ -62,13 +52,7 @@ CREATE TABLE IF NOT EXISTS session.t_session_attributes
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     session_id UUID NOT NULL REFERENCES session.t_sessions(id),
     attribute_id UUID NOT NULL REFERENCES author.m_attributes(id),
@@ -80,12 +64,7 @@ COMMENT ON COLUMN session.t_session_attributes.created_by IS 'User who created t
 COMMENT ON COLUMN session.t_session_attributes.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN session.t_session_attributes.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN session.t_session_attributes.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN session.t_session_attributes.is_active IS 'Indicates if the record is active';
-COMMENT ON COLUMN session.t_session_attributes.inactive_at IS 'Timestamp when the record became inactive';
-COMMENT ON COLUMN session.t_session_attributes.inactive_by IS 'User who marked the record inactive';
-COMMENT ON COLUMN session.t_session_attributes.is_deleted IS 'Indicates if the record is deleted';
-COMMENT ON COLUMN session.t_session_attributes.deleted_at IS 'Timestamp when the record was deleted';
-COMMENT ON COLUMN session.t_session_attributes.deleted_by IS 'User who deleted the record';
+COMMENT ON COLUMN session.t_session_attributes.row_status IS 'Status of the session attribute record: ACTIVE, INACTIVE, DELETED, or REVOKED';
 COMMENT ON COLUMN session.t_session_attributes.session_id IS 'Reference to the user session';
 COMMENT ON COLUMN session.t_session_attributes.attribute_id IS 'Reference to the attribute definition';
 COMMENT ON COLUMN session.t_session_attributes.values IS 'Attribute values associated with the session';
@@ -101,13 +80,7 @@ CREATE TABLE IF NOT EXISTS session.t_session_policies
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     session_id UUID NOT NULL REFERENCES session.t_sessions(id),
     policy_id UUID NOT NULL REFERENCES author.t_policies(id),
@@ -119,12 +92,7 @@ COMMENT ON COLUMN session.t_session_policies.created_by IS 'User who created the
 COMMENT ON COLUMN session.t_session_policies.created_at IS 'Timestamp when the record was created';
 COMMENT ON COLUMN session.t_session_policies.updated_by IS 'User who last updated the record';
 COMMENT ON COLUMN session.t_session_policies.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN session.t_session_policies.is_active IS 'Indicates if the record is active';
-COMMENT ON COLUMN session.t_session_policies.inactive_at IS 'Timestamp when the record became inactive';
-COMMENT ON COLUMN session.t_session_policies.inactive_by IS 'User who marked the record inactive';
-COMMENT ON COLUMN session.t_session_policies.is_deleted IS 'Indicates if the record is deleted';
-COMMENT ON COLUMN session.t_session_policies.deleted_at IS 'Timestamp when the record was deleted';
-COMMENT ON COLUMN session.t_session_policies.deleted_by IS 'User who deleted the record';
+COMMENT ON COLUMN session.t_session_policies.row_status IS 'Status of the session policy record: ACTIVE, INACTIVE, DELETED, or REVOKED';
 COMMENT ON COLUMN session.t_session_policies.session_id IS 'Reference to the user session';
 COMMENT ON COLUMN session.t_session_policies.policy_id IS 'Reference to the policy definition';
 COMMENT ON COLUMN session.t_session_policies.values IS 'Policy values associated with the session';

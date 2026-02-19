@@ -9,13 +9,7 @@ CREATE TABLE IF NOT EXISTS profile.m_user_profiles
     updated_by UUID REFERENCES authentication.t_users(id),
     updated_at TIMESTAMP WITHOUT TIME ZONE,
 
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
-    inactive_at TIMESTAMP WITHOUT TIME ZONE,
-    inactive_by UUID REFERENCES authentication.t_users(id),
-
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE,
-    deleted_by UUID REFERENCES authentication.t_users(id),
+    row_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE' CHECK (row_status IN ('ACTIVE', 'INACTIVE', 'DELETED', 'REVOKED')),
 
     user_id UUID NOT NULL REFERENCES authentication.t_users(id),
     personal_id UUID NOT NULL REFERENCES t_personal_info(id)
@@ -26,12 +20,7 @@ COMMENT ON COLUMN profile.m_user_profiles.created_by IS 'User who created the pr
 COMMENT ON COLUMN profile.m_user_profiles.created_at IS 'Timestamp when the profile was created';
 COMMENT ON COLUMN profile.m_user_profiles.updated_by IS 'User who last updated the profile';
 COMMENT ON COLUMN profile.m_user_profiles.updated_at IS 'Timestamp of last update';
-COMMENT ON COLUMN profile.m_user_profiles.is_active IS 'Indicates if the profile is active';
-COMMENT ON COLUMN profile.m_user_profiles.inactive_at IS 'Timestamp when the profile became inactive';
-COMMENT ON COLUMN profile.m_user_profiles.inactive_by IS 'User who marked the profile inactive';
-COMMENT ON COLUMN profile.m_user_profiles.is_deleted IS 'Indicates if the profile is deleted';
-COMMENT ON COLUMN profile.m_user_profiles.deleted_at IS 'Timestamp when the profile was deleted';
-COMMENT ON COLUMN profile.m_user_profiles.deleted_by IS 'User who deleted the profile';
+COMMENT ON COLUMN profile.m_user_profiles.row_status IS 'Status of the profile row: ACTIVE, INACTIVE, or DELETED';
 COMMENT ON COLUMN profile.m_user_profiles.user_id IS 'Reference to the user account';
 COMMENT ON COLUMN profile.m_user_profiles.personal_id IS 'Reference to the personal information record';
 
