@@ -46,29 +46,25 @@ public class CreateOtpCommandHandler : CommonHandler, IRequestHandler<CreateOtpC
         {
             try
             {
-                var otpResult = await _otpService.GenerateOTP(request.purpose, request.contact);
-                if (otpResult == null)
-                    throw new Exception("failed to generate otp.");
+                var otpResult = await _otpService.GenerateOtp(request.purpose, request.contact);
+                if (otpResult == null) throw new Exception("failed to generate otp.");
 
-                var parameters = await _parameterQueryRepository.GetParameters(key: this._appSettings.KeyValue.OTPEmailTemplate);
-                if (parameters == null || !parameters.Any())
-                    throw new Exception("parameter is not configured.");
+                var parameters = await _parameterQueryRepository.GetParameters(key: this._appSettings.KeyValue.OtpEmailTemplate);
+                if (parameters == null || !parameters.Any()) throw new Exception("parameter is not configured.");
 
                 var parameter = parameters.First();
 
                 var templates = await _notificationQueryRepository.GetNotificationTemplates(key: parameter.value);
-                if (templates == null || !templates.Any())
-                    throw new Exception("template is not configured.");
+                if (templates == null || !templates.Any()) throw new Exception("template is not configured.");
 
                 var template = templates.First();
 
                 var variables = VariableExtension.Parse(template.variables!);
-                if (variables == null || !variables.Any())
-                    throw new Exception("template content is invalid.");
+                if (variables == null || !variables.Any()) throw new Exception("template content is invalid.");
 
-                variables["code"] = otpResult.code!.value;
-                variables["expiry"] = otpResult.expiry.ToString();
-                variables["refCode"] = otpResult.refCode!.value.ToString();
+                variables["code"] = otpResult.code?.value ?? throw new Exception("OTP code is missing.");
+                variables["expiry"] = otpResult.expiry?.ToString("yyyy-MM-dd HH:mm:ss") ?? throw new Exception("OTP expiry is missing.");
+                variables["refCode"] = otpResult.refCode?.value.ToString() ?? throw new Exception("OTP refCode is missing.");
 
                 template.content = VariableExtension.Replace(template.content!, variables);
 
@@ -80,13 +76,13 @@ public class CreateOtpCommandHandler : CommonHandler, IRequestHandler<CreateOtpC
             catch (ArgumentException ex)
             {
                 transaction.Rollback();
-                Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
+                Console.WriteLine("Error in CreateOtpCommandHandler: ", ex.Message);
                 return this.FailResponse<OtpEntity>(HttpStatusCode.BadRequest, "20001");
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
-                Console.WriteLine("Error in CreateOTPCommandHandler: ", ex.Message);
+                Console.WriteLine("Error in CreateOtpCommandHandler: ", ex.Message);
                 return this.FailResponse<OtpEntity>(HttpStatusCode.InternalServerError, "30001");
             }
         }

@@ -65,5 +65,5 @@ public class EmailSettings
 
 public class KeyValue
 {
-    public string OTPEmailTemplate { get; set; } = default!;
+    public string OtpEmailTemplate { get; set; } = default!;
 }

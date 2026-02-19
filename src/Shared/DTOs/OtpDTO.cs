@@ -6,11 +6,15 @@ public class OtpDTO
 {
     public Guid? id { get; set; }
     public required string refCode { get; set; }
-    public DateTime? expiredAt { get; set; }
+    public required string otpCode { get; set; }
+    public required string purpose { get; set; }
+    public int attempts { get; set; }
+    public DateTime expiresAt { get; set; }
 }
 
 public class OtpReferenceDTO
 {
+    public required Guid id { get; set; }
     public required string refCode { get; set; }
     public required string otpCode { get; set; }
 }

@@ -4,13 +4,13 @@ using FluentValidation;
 
 namespace Application.Otp.Validator;
 
-public class CreateOTPCommandValidator : AbstractValidator<CreateOtpCommand>
+public class CreateOtpCommandValidator : AbstractValidator<CreateOtpCommand>
 {
-    public CreateOTPCommandValidator()
+    public CreateOtpCommandValidator()
     {
         RuleFor(x => x.purpose)
             .NotEmpty().WithMessage("Purpose is required.")
-            .Must(BeAValidPurpose).WithMessage("Invalid OTP purpose.");
+            .Must(BeAValidPurpose).WithMessage("Invalid Otp purpose.");
 
         RuleFor(x => x.contact)
             .NotEmpty().WithMessage("Contact is required.")

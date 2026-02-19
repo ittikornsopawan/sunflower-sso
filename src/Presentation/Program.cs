@@ -1,8 +1,10 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.Extensions.Options;
+
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 using Serilog;
 using FluentValidation;
@@ -141,6 +143,20 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var server = app.Services.GetRequiredService<IServer>();
+    var addresses = server.Features.Get<IServerAddressesFeature>();
+
+    if (addresses != null)
+    {
+        foreach (var address in addresses.Addresses)
+        {
+            Console.WriteLine($"🚀 Application is running on: {address}");
+        }
+    }
+});
 
 try
 {

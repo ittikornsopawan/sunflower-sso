@@ -12,7 +12,4 @@ public class ParameterCommandRepository : BaseRepository, IParameterCommandRepos
     {
     }
 
-    public async Task Create(ParameterEntity parameter)
-    {
-    }
 }

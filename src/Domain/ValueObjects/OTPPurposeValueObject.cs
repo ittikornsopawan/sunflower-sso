@@ -1,11 +1,11 @@
 namespace Domain.ValueObjects;
 
 /// <summary>
-/// Value Object representing the Purpose of an action (e.g., OTP purpose).
+/// Value Object representing the Purpose of an action (e.g., Otp purpose).
 /// The value must be one of the allowed purposes.
 /// </summary>
 /// <author>ChatGPT</author>
-public sealed record OTPPurposeValueObject
+public sealed record OtpPurposeValueObject
 {
     /// <summary>
     /// The purpose value.
@@ -31,7 +31,7 @@ public sealed record OTPPurposeValueObject
     /// <exception cref="ArgumentException">Thrown when the value is null, empty, or not in the allowed purposes list.</exception>
     /// <returns>An instance of <see cref="PurposeValueObject"/>.</returns>
     /// <author>ChatGPT</author>
-    public OTPPurposeValueObject(string value)
+    public OtpPurposeValueObject(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Purpose cannot be empty.", nameof(value));

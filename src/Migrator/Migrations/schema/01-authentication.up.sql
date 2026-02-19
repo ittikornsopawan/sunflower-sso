@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS authentication.t_users
 
     code VARCHAR(32) NOT NULL,
     username VARCHAR(128) NOT NULL,
-    authentication_type VARCHAR(16) NOT NULL CHECK (authentication_type IN ('PASSWORD', 'OAUTH', 'EMAIL_OTP', 'MOBILE_OTP'))
+    authentication_type VARCHAR(16) NOT NULL CHECK (authentication_type IN ('PASSWORD', 'OAUTH', 'EMAIL_Otp', 'MOBILE_Otp'))
 );
 
 COMMENT ON TABLE authentication.t_users IS 'Stores system users, their authentication type, and status.';
@@ -38,7 +38,7 @@ COMMENT ON COLUMN authentication.t_users.deleted_at IS 'Timestamp when the user 
 COMMENT ON COLUMN authentication.t_users.deleted_by IS 'User who deleted this record (references authentication.t_users.id).';
 COMMENT ON COLUMN authentication.t_users.code IS 'Unique code assigned to the user.';
 COMMENT ON COLUMN authentication.t_users.username IS 'Unique username for login.';
-COMMENT ON COLUMN authentication.t_users.authentication_type IS 'Type of authentication: PASSWORD, OAUTH, EMAIL_OTP, MOBILE_OTP.';
+COMMENT ON COLUMN authentication.t_users.authentication_type IS 'Type of authentication: PASSWORD, OAUTH, EMAIL_Otp, MOBILE_Otp.';
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_t_users_username ON authentication.t_users(username);
 COMMENT ON INDEX authentication.uq_t_users_username IS 'Ensures that usernames are unique across all users.';

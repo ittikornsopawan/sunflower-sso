@@ -21,7 +21,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("v1/create")]
-        public async Task<IActionResult> CreateOTP([FromBody] OtpRequestModel request)
+        public async Task<IActionResult> CreateOtp([FromBody] OtpRequestModel request)
         {
             var command = new CreateOtpCommand(request.purpose, request.contact);
             var result = await _mediator.Send(command);
@@ -32,16 +32,16 @@ namespace Presentation.Controllers
             var response = new OtpResponseModel
             {
                 refCode = result.data.refCode!.value,
-                expiresAt = result.data.expiry
+                expiresAt = result.data.expiry ?? throw new Exception("Expiry date is null.")
             };
 
             return this.ResponseHandler<OtpResponseModel>(response);
         }
 
         [HttpPost("v1/verify")]
-        public async Task<IActionResult> VerifyOTP([FromBody] OtpVerifyRequestModel request)
+        public async Task<IActionResult> VerifyOtp([FromBody] OtpVerifyRequestModel request)
         {
-            var command = new VerifyOTPCommand(request.code, request.refCode);
+            var command = new VerifyOtpCommand(request.code, request.refCode);
             var result = await _mediator.Send(command);
 
             if (result.status.statusCode != HttpStatusCode.OK)

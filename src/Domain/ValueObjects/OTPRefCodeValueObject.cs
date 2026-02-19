@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace Domain.ValueObjects;
 
 /// <summary>
-/// Value Object representing an 8-character alphanumeric OTP reference code.
+/// Value Object representing an 8-character alphanumeric Otp reference code.
 /// </summary>
 /// <author>Ittikorn Sopawan</author>
 public sealed record OtpRefCodeValueObject

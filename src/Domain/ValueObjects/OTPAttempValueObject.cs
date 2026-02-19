@@ -1,11 +1,11 @@
 namespace Domain.ValueObjects;
 
 /// <summary>
-/// Value Object representing OTP attempts.
+/// Value Object representing Otp attempts.
 /// Encapsulates the current attempt count and maximum allowed attempts.
 /// Immutable and self-validated.
 /// </summary>
-public sealed record OTPAttemptValueObject
+public sealed record OtpAttemptValueObject
 {
     /// <summary>
     /// Current number of attempts.
@@ -18,23 +18,23 @@ public sealed record OTPAttemptValueObject
     private int maxAttempts { get; init; }
 
     /// <summary>
-    /// Creates a new OTPAttemptValueObject with validation.
+    /// Creates a new OtpAttemptValueObject with validation.
     /// </summary>
     /// <param name="value">Current attempt count.</param>
     /// <param name="maxAttempts">Maximum allowed attempts. Default = 5.</param>
     /// <exception cref="ArgumentException">If value is invalid or exceeds max attempts.</exception>
-    public OTPAttemptValueObject(int value, int? maxAttempts = null)
+    public OtpAttemptValueObject(int value, int? maxAttempts = null)
     {
         int max = maxAttempts ?? 5;
 
         if (value < 0)
-            throw new ArgumentException("OTP attempt cannot be negative.", nameof(value));
+            throw new ArgumentException("Otp attempt cannot be negative.", nameof(value));
 
         if (max <= 0)
             throw new ArgumentException("Max attempts must be greater than zero.", nameof(maxAttempts));
 
         if (value > max)
-            throw new ArgumentException("OTP attempts cannot exceed max attempts.", nameof(value));
+            throw new ArgumentException("Otp attempts cannot exceed max attempts.", nameof(value));
 
         this.value = value;
         this.maxAttempts = max;
@@ -43,14 +43,14 @@ public sealed record OTPAttemptValueObject
     /// <summary>
     /// Increments the attempt count and returns a new instance (immutable).
     /// </summary>
-    /// <returns>New OTPAttemptValueObject with incremented attempts.</returns>
+    /// <returns>New OtpAttemptValueObject with incremented attempts.</returns>
     /// <exception cref="InvalidOperationException">If maximum attempts exceeded.</exception>
-    public OTPAttemptValueObject Increment()
+    public OtpAttemptValueObject Increment()
     {
         if (this.value >= this.maxAttempts)
-            throw new InvalidOperationException("Maximum OTP attempts exceeded.");
+            throw new InvalidOperationException("Maximum Otp attempts exceeded.");
 
-        return new OTPAttemptValueObject(this.value + 1, this.maxAttempts);
+        return new OtpAttemptValueObject(this.value + 1, this.maxAttempts);
     }
 
     /// <summary>

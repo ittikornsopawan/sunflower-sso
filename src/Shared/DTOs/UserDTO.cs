@@ -29,7 +29,7 @@ public class UserDTO
 
     /// <summary>
     /// Gets or sets the authentication type.
-    /// Input includes: 'PASSWORD', 'OAUTH', 'EMAIL_OTP', 'MOBILE_OTP'.
+    /// Input includes: 'PASSWORD', 'OAUTH', 'EMAIL_Otp', 'MOBILE_Otp'.
     /// </summary>
     [Required(ErrorMessage = "Authentication type is required.")]
     [Display(Name = "Authentication Type")]

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS notification.t_notifications (
     status VARCHAR(16) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'SENT', 'FAILED')),
     retry_count INT NOT NULL DEFAULT 0
 );
-COMMENT ON TABLE notification.t_notifications IS 'Table to store notification records for OTP and other alerts';
+COMMENT ON TABLE notification.t_notifications IS 'Table to store notification records for Otp and other alerts';
 COMMENT ON COLUMN notification.t_notifications.created_by IS 'User who created the notification record';
 COMMENT ON COLUMN notification.t_notifications.created_at IS 'Timestamp when the notification record was created';
 COMMENT ON COLUMN notification.t_notifications.type IS 'Type of notification: EMAIL, SMS, PUSH';
