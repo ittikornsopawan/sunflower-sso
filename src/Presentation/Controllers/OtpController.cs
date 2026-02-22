@@ -31,6 +31,7 @@ namespace Presentation.Controllers
 
             var response = new OtpResponseModel
             {
+                id = result.data.id,
                 refCode = result.data.refCode!.value,
                 expiresAt = result.data.expiry ?? throw new Exception("Expiry date is null.")
             };
@@ -41,7 +42,7 @@ namespace Presentation.Controllers
         [HttpPost("v1/verify")]
         public async Task<IActionResult> VerifyOtp([FromBody] OtpVerifyRequestModel request)
         {
-            var command = new VerifyOtpCommand(request.code, request.refCode);
+            var command = new VerifyOtpCommand(request.id, request.code, request.refCode);
             var result = await _mediator.Send(command);
 
             if (result.status.statusCode != HttpStatusCode.OK)
@@ -49,7 +50,7 @@ namespace Presentation.Controllers
 
             var response = new OtpVerifyResponseModel
             {
-                id = Guid.NewGuid()
+                id = result.data.id
             };
 
             return this.ResponseHandler<OtpVerifyResponseModel>(response);

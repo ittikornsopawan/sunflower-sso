@@ -125,6 +125,25 @@ public class OtpEntity : BaseEntity
         this.expiry = expiry ?? DateTime.UtcNow.AddMinutes(5);
     }
 
+    public OtpEntity(
+        OtpPurposeValueObject purpose,
+        OtpRefCodeValueObject refCode,
+        OtpCodeValueObject? code,
+        Guid? id = null,
+        DateTime? expiry = null,
+        OtpAttemptValueObject? attempts = null,
+        string? result = null
+    )
+    {
+        this.id = id ?? Guid.NewGuid();
+        this.purpose = purpose ?? throw new ArgumentNullException(nameof(purpose));
+        this.code = code;
+        this.refCode = refCode ?? throw new ArgumentNullException(nameof(refCode));
+        this.attempts = attempts ?? throw new ArgumentNullException(nameof(attempts));
+        this.expiry = expiry ?? DateTime.UtcNow.AddMinutes(5);
+        this.result = result ?? "PENDING";
+    }
+
     /// <summary>
     /// Sets Otp code, reference code, and expiry.
     /// </summary>

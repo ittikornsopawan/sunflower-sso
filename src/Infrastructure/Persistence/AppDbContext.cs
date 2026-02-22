@@ -382,7 +382,6 @@ public class AppDbContext : DbContext
             entity.Property(e => e.createdAt).HasColumnName("created_at");
             entity.Property(e => e.otpId).HasColumnName("otp_id");
             entity.Property(e => e.countNo).HasColumnName("count_no");
-            entity.Property(e => e.purpose).HasColumnName("purpose");
             entity.Property(e => e.ipAddress).HasColumnName("ip_address");
             entity.Property(e => e.deviceId).HasColumnName("device_id");
             entity.Property(e => e.deviceOs).HasColumnName("device_os");

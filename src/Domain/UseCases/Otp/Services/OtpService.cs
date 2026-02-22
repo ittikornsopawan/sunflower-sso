@@ -2,11 +2,13 @@ using System;
 using Domain.Entities;
 using Domain.Interfaces.Repository;
 using Domain.ValueObjects;
+using Infrastructure.Common;
 
 namespace Domain.UseCases.Otp.Services;
 
 public interface IOtpService
 {
+    Task<OtpEntity?> GetExistingOtpByContact(string contact);
     Task<OtpEntity> GenerateOtp(string purpose, string contact);
     Task<OtpEntity?> Verify(string code, string refCode);
 }
@@ -19,6 +21,34 @@ public class OtpService : IOtpService
     {
         _otpQueryRepository = otpQueryRepository;
         _otpCommandRepository = otpCommandRepository;
+    }
+
+    /// <summary>
+    /// Retrieves an existing OTP entity based on the provided contact information. It converts the contact string into a byte array, queries the repository for an active OTP associated with that contact, and if found, constructs and returns an OtpEntity. If no active OTP is found for the given contact, it returns null.
+    /// </summary>
+    /// <param name="contact">The contact information (email or mobile number) to retrieve the OTP for.</param>
+    /// <returns>The retrieved OtpEntity if found, otherwise null.</returns>
+    public async Task<OtpEntity?> GetExistingOtpByContact(string contact)
+    {
+        var contactOV = new ContactValueObject(contact);
+        var existingOtp = await this._otpQueryRepository.GetExistingOtpByContact(contactOV.valueByte);
+
+        if (existingOtp == null) return null;
+
+        var purposeOV = new OtpPurposeValueObject(existingOtp.purpose);
+        var codeOV = new OtpCodeValueObject(existingOtp.otpCode);
+        var refCodeOV = new OtpRefCodeValueObject(existingOtp.refCode);
+        var attemptsOV = new OtpAttemptValueObject(existingOtp.attempts);
+
+        var otpEntity = new OtpEntity(
+           contact: contactOV,
+           purpose: purposeOV,
+           code: codeOV,
+           refCode: refCodeOV,
+           attempts: attemptsOV
+       );
+
+        return otpEntity;
     }
 
     /// <summary>
@@ -88,44 +118,60 @@ public class OtpService : IOtpService
     /// <exception cref="Exception"></exception>
     public async Task<OtpEntity?> Verify(string code, string refCode)
     {
-        if (string.IsNullOrWhiteSpace(code))
-            throw new ArgumentException("code cannot be empty.", nameof(code));
-
-        if (string.IsNullOrWhiteSpace(refCode))
-            throw new ArgumentException("refCode cannot be empty.", nameof(refCode));
-
-        var existingOtp = await this._otpQueryRepository.GetOtpByRefCode(refCode);
-        if (existingOtp == null) throw new Exception("OTP not found.");
-
-        var codeOV = new OtpCodeValueObject(existingOtp.otpCode);
-        var refCodeOV = new OtpRefCodeValueObject(existingOtp.refCode);
-
-        var otpVerifyEntity = new OtpVerifyEntity(code: codeOV, refCode: refCodeOV);
-
-        otpVerifyEntity.Verify(code);
-
-        if (!otpVerifyEntity.isVerified)
+        try
         {
-            await this._otpCommandRepository.IncreaseOtpAttempts(existingOtp.id);
+
+            if (string.IsNullOrWhiteSpace(code))
+                throw new ArgumentException("code cannot be empty.", nameof(code));
+
+            if (string.IsNullOrWhiteSpace(refCode))
+                throw new ArgumentException("refCode cannot be empty.", nameof(refCode));
+
+            var existingOtp = await this._otpQueryRepository.GetOtpByRefCode(refCode);
+            if (existingOtp == null) throw new Exception("OTP not found.");
+
+            var codeOV = new OtpCodeValueObject(existingOtp.otpCode);
+            var refCodeOV = new OtpRefCodeValueObject(existingOtp.refCode);
+
+            var otpVerifyEntity = new OtpVerifyEntity(code: codeOV, refCode: refCodeOV);
+
+            otpVerifyEntity.Verify(code);
+
+            var otpResult = OtpResultStaticValue.SUCCESS;
+
+            if (!otpVerifyEntity.isVerified)
+            {
+                otpResult = OtpResultStaticValue.FAILED;
+
+                await this._otpCommandRepository.IncreaseOtpAttempts(existingOtp.id);
+            }
+
+            var otp = await this._otpQueryRepository.GetOtpById(existingOtp.id);
+            if (otp == null) throw new Exception("OTP not found after verification.");
+
+            codeOV = new OtpCodeValueObject(otp!.otpCode);
+            refCodeOV = new OtpRefCodeValueObject(otp!.refCode);
+            var purposeOV = new OtpPurposeValueObject(otp!.purpose);
+            var attemptsOV = new OtpAttemptValueObject(otp!.attempts);
+
+            var otpEntity = new OtpEntity(
+                id: otp.id,
+                purpose: purposeOV,
+                code: otpResult == OtpResultStaticValue.SUCCESS ? codeOV : null,
+                refCode: refCodeOV,
+                attempts: attemptsOV,
+                result: otpResult
+            );
+
+            await this._otpCommandRepository.UpdateOtp(otpEntity);
+
+            return otpEntity;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OTP verification: {ex.Message}");
             return null;
         }
-
-        var otp = await this._otpQueryRepository.GetOtpById(existingOtp.id);
-        if (otp == null) throw new Exception("OTP not found after verification.");
-
-        codeOV = new OtpCodeValueObject(otp!.otpCode);
-        refCodeOV = new OtpRefCodeValueObject(otp!.refCode);
-        var purposeOV = new OtpPurposeValueObject(otp!.purpose);
-        var attemptsOV = new OtpAttemptValueObject(otp!.attempts);
-
-        var otpEntity = new OtpEntity(
-            id: otp.id,
-            purpose: purposeOV,
-            code: codeOV,
-            refCode: refCodeOV,
-            attempts: attemptsOV
-        );
-
-        return otpEntity;
     }
 }

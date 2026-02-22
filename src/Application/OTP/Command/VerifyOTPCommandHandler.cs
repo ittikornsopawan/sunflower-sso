@@ -23,6 +23,10 @@ public class VerifyOtpCommandHandler : CommonHandler, IRequestHandler<VerifyOtpC
         try
         {
             var otpEntity = await _otpService.Verify(code: request.code, refCode: request.refCode);
+
+            if (otpEntity == null)
+                return this.FailMessageResponse<OtpEntity>(HttpStatusCode.BadRequest, "30001");
+
             return this.SuccessResponse<OtpEntity>(otpEntity!, HttpStatusCode.OK);
         }
         catch (ArgumentException ex)

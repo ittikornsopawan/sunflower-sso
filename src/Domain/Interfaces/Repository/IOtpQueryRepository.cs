@@ -8,4 +8,5 @@ public interface IOtpQueryRepository
     Task<OtpDTO?> GetOtpById(Guid id);
     Task<List<OtpReferenceDTO>> GetOtpByOtpAndRefCode(string otpCode, string refCode);
     Task<OtpReferenceDTO?> GetOtpByRefCode(string refCode);
+    Task<OtpDTO?> GetExistingOtpByContact(byte[] contact);
 }

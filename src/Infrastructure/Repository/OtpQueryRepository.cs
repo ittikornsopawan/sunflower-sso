@@ -13,11 +13,33 @@ public class OtpQueryRepository : BaseRepository, IOtpQueryRepository
     {
     }
 
+    public async Task<OtpDTO?> GetExistingOtpByContact(byte[] contact)
+    {
+        var item = await this._dbContext.t_otp.Where(o =>
+            o.contact == contact &&
+            o.rowStatus == EntityStatusStaticValue.ACTIVE &&
+            o.result == OtpResultStaticValue.PENDING &&
+            o.expiresAt > DateTime.UtcNow
+        ).FirstOrDefaultAsync();
+
+        if (item == null) return null;
+
+        return new OtpDTO
+        {
+            id = item.id,
+            refCode = item.refCode,
+            otpCode = item.otp,
+            purpose = item.purpose,
+            attempts = item.attempts,
+            expiresAt = item.expiresAt
+        };
+    }
+
     public async Task<OtpDTO?> GetOtpById(Guid id)
     {
         var item = await this._dbContext.t_otp.Where(o =>
             o.id == id &&
-            o.rowStatus == "ACTIVE" &&
+            o.rowStatus == EntityStatusStaticValue.ACTIVE &&
             o.expiresAt > DateTime.UtcNow
         ).FirstOrDefaultAsync();
 
@@ -39,7 +61,8 @@ public class OtpQueryRepository : BaseRepository, IOtpQueryRepository
         var items = await this._dbContext.t_otp.Where(o =>
             o.otp == otpCode &&
             o.refCode == refCode &&
-            o.rowStatus == "ACTIVE" &&
+            o.rowStatus == EntityStatusStaticValue.ACTIVE &&
+            o.result == OtpResultStaticValue.PENDING &&
             o.expiresAt > DateTime.UtcNow
         ).Select(o => new OtpReferenceDTO
         {
@@ -56,7 +79,7 @@ public class OtpQueryRepository : BaseRepository, IOtpQueryRepository
         var item = await this._dbContext.t_otp
             .Where(o =>
                 o.refCode == refCode &&
-                o.rowStatus == "ACTIVE" &&
+                o.rowStatus == EntityStatusStaticValue.ACTIVE &&
                 o.expiresAt > DateTime.UtcNow
             )
             .Select(o => new OtpReferenceDTO

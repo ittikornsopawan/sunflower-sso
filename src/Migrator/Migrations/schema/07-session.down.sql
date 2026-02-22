@@ -6,4 +6,4 @@ DROP TABLE IF EXISTS session.t_session_policies CASCADE;
 DROP TABLE IF EXISTS session.t_session_attributes CASCADE;
 DROP TABLE IF EXISTS session.t_sessions CASCADE;
 
-DROP SCHEMA IF EXISTS sessions CASCADE;
+DROP SCHEMA IF EXISTS session CASCADE;

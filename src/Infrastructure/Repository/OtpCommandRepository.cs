@@ -24,11 +24,13 @@ public class OtpCommandRepository : BaseRepository, IOtpCommandRepository
                 id = otpEntity.id,
                 code = otpEntity.id.ToString("N").Substring(0, 16),
                 purpose = otpEntity.purpose!.value,
+                contact = otpEntity.contact!.valueByte,
                 otp = otpEntity.code!.value,
                 refCode = otpEntity.refCode!.value,
                 attempts = otpEntity.attempts!.value,
                 result = otpEntity.result,
                 expiresAt = otpEntity.expiry ?? DateTime.UtcNow.AddMinutes(5),
+                rowStatus = EntityStatusStaticValue.ACTIVE,
                 createdById = Guid.Empty,
                 createdAt = DateTime.UtcNow
             };
@@ -48,20 +50,15 @@ public class OtpCommandRepository : BaseRepository, IOtpCommandRepository
     {
         try
         {
-            var exist = await _dbContext.t_otp.FirstOrDefaultAsync(o => o.id == otpEntity.id);
+            var exist = await _dbContext.t_otp.FirstAsync(o => o.id == otpEntity.id);
             if (exist == null) return;
 
-            exist.code = otpEntity.id.ToString("N").Substring(0, 16);
             exist.purpose = otpEntity.purpose!.value;
-            exist.otp = otpEntity.code!.value;
-            exist.refCode = otpEntity.refCode!.value;
             exist.attempts = otpEntity.attempts!.value;
             exist.result = otpEntity.result;
-            exist.expiresAt = otpEntity.expiry ?? DateTime.UtcNow.AddMinutes(5);
             exist.updatedById = Guid.Empty;
             exist.updatedAt = DateTime.UtcNow;
 
-            _dbContext.t_otp.Update(exist);
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)

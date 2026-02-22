@@ -25,7 +25,7 @@ public class StatusResponseModel
             if (name.Length <= 2 || name.All(char.IsUpper))
                 return name;
 
-            return Regex.Replace(name, "(?<!^)([A-Z])", " sunflower-sso");
+            return Regex.Replace(name, "(?<!^)([A-Z])", " $1");
         }
     }
     public string? bizErrorCode { get; set; } = default!;
